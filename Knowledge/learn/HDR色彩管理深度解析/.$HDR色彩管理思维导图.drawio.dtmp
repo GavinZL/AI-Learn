@@ -1,0 +1,220 @@
+<mxfile host="Electron" agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/29.6.1 Chrome/142.0.7444.265 Electron/39.8.0 Safari/537.36" version="29.6.1">
+  <diagram name="HDR色彩管理思维导图" id="hdr-mindmap">
+    <mxGraphModel dx="1050" dy="1119" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="0" pageScale="1" pageWidth="1600" pageHeight="1200" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="center" parent="1" style="ellipse;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=16;fontStyle=1" value="HDR色彩管理&#xa;深度解析" vertex="1">
+          <mxGeometry height="80" width="160" x="720" y="310" as="geometry" />
+        </mxCell>
+        <mxCell id="branch1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=14;fontStyle=1" value="基础概念" vertex="1">
+          <mxGeometry height="50" width="120" x="400" y="100" as="geometry" />
+        </mxCell>
+        <mxCell id="edge1" edge="1" parent="1" source="center" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#666666;strokeWidth=2" target="branch1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="b1-1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontSize=11" value="光与颜色本质&#xa;SPD光谱分布" vertex="1">
+          <mxGeometry height="45" width="100" x="200" y="40" as="geometry" />
+        </mxCell>
+        <mxCell id="edge-b1-1" edge="1" parent="1" source="branch1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#999999" target="b1-1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="b1-2" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontSize=11" value="CIE 1931&#xa;XYZ色彩空间" vertex="1">
+          <mxGeometry height="45" width="100" x="200" y="100" as="geometry" />
+        </mxCell>
+        <mxCell id="edge-b1-2" edge="1" parent="1" source="branch1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#999999" target="b1-2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="b1-3" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontSize=11" value="xy色度图&#xa;光谱轨迹" vertex="1">
+          <mxGeometry height="45" width="100" x="200" y="160" as="geometry" />
+        </mxCell>
+        <mxCell id="edge-b1-3" edge="1" parent="1" source="branch1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#999999" target="b1-3">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="b1-4" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontSize=11" value="RGB颜色空间&#xa;三原色/白点/传递函数" vertex="1">
+          <mxGeometry height="50" width="120" x="360" y="180" as="geometry" />
+        </mxCell>
+        <mxCell id="edge-b1-4" edge="1" parent="1" source="branch1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#999999" target="b1-4">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="branch2" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=14;fontStyle=1" value="传递函数" vertex="1">
+          <mxGeometry height="50" width="120" x="550" y="80" as="geometry" />
+        </mxCell>
+        <mxCell id="edge2" edge="1" parent="1" source="center" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#666666;strokeWidth=2" target="branch2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="b2-1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontSize=11" value="OETF&#xa;光→电转换" vertex="1">
+          <mxGeometry height="40" width="80" x="520" y="10" as="geometry" />
+        </mxCell>
+        <mxCell id="edge-b2-1" edge="1" parent="1" source="branch2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#999999" target="b2-1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="b2-2" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontSize=11" value="EOTF&#xa;电→光转换" vertex="1">
+          <mxGeometry height="40" width="80" x="620" y="10" as="geometry" />
+        </mxCell>
+        <mxCell id="edge-b2-2" edge="1" parent="1" source="branch2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#999999" target="b2-2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="b2-3" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontSize=11" value="Gamma校正&#xa;感知均匀编码" vertex="1">
+          <mxGeometry height="45" width="100" x="560" y="160" as="geometry" />
+        </mxCell>
+        <mxCell id="edge-b2-3" edge="1" parent="1" source="branch2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#999999" target="b2-3">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="branch3" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=14;fontStyle=1" value="SDR渲染管线" vertex="1">
+          <mxGeometry height="50" width="130" x="900" y="100" as="geometry" />
+        </mxCell>
+        <mxCell id="edge3" edge="1" parent="1" source="center" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#666666;strokeWidth=2" target="branch3">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="b3-1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontSize=11" value="线性工作空间&#xa;sRGB Linear" vertex="1">
+          <mxGeometry height="45" width="100" x="920" y="20" as="geometry" />
+        </mxCell>
+        <mxCell id="edge-b3-1" edge="1" parent="1" source="branch3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#999999" target="b3-1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="b3-2" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontSize=11" value="HDR→SDR&#xa;Tonemapping" vertex="1">
+          <mxGeometry height="45" width="100" x="1050" y="80" as="geometry" />
+        </mxCell>
+        <mxCell id="edge-b3-2" edge="1" parent="1" source="branch3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#999999" target="b3-2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="b3-3" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontSize=11" value="Reinhard&#xa;Hable/ACES Filmic" vertex="1">
+          <mxGeometry height="45" width="100" x="1050" y="140" as="geometry" />
+        </mxCell>
+        <mxCell id="edge-b3-3" edge="1" parent="1" source="branch3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#999999" target="b3-3">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="branch4" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=14;fontStyle=1" value="HDR显示技术" vertex="1">
+          <mxGeometry height="50" width="130" x="1050" y="250" as="geometry" />
+        </mxCell>
+        <mxCell id="edge4" edge="1" parent="1" source="center" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#666666;strokeWidth=2" target="branch4">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="b4-1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontSize=11" value="Rec.2020广色域&#xa;75.8% CIE 1931" vertex="1">
+          <mxGeometry height="45" width="110" x="1220" y="200" as="geometry" />
+        </mxCell>
+        <mxCell id="edge-b4-1" edge="1" parent="1" source="branch4" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#999999" target="b4-1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="b4-2" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontSize=11" value="PQ (ST 2084)&#xa;感知量化 0-10000nit" vertex="1">
+          <mxGeometry height="45" width="110" x="1220" y="260" as="geometry" />
+        </mxCell>
+        <mxCell id="edge-b4-2" edge="1" parent="1" source="branch4" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#999999" target="b4-2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="b4-3" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontSize=11" value="HLG&#xa;混合对数Gamma" vertex="1">
+          <mxGeometry height="45" width="110" x="1220" y="320" as="geometry" />
+        </mxCell>
+        <mxCell id="edge-b4-3" edge="1" parent="1" source="branch4" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#999999" target="b4-3">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="b4-4" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontSize=11" value="10-bit/12-bit&#xa;高位深" vertex="1">
+          <mxGeometry height="40" width="90" x="1080" y="340" as="geometry" />
+        </mxCell>
+        <mxCell id="edge-b4-4" edge="1" parent="1" source="branch4" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#999999" target="b4-4">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="branch5" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e6f3ff;strokeColor=#0070c0;fontSize=14;fontStyle=1" value="ACES色彩管理" vertex="1">
+          <mxGeometry height="50" width="140" x="950" y="450" as="geometry" />
+        </mxCell>
+        <mxCell id="edge5" edge="1" parent="1" source="center" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#666666;strokeWidth=2" target="branch5">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="b5-1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontSize=11" value="AP0/AP1&#xa;颜色空间" vertex="1">
+          <mxGeometry height="45" width="90" x="1120" y="420" as="geometry" />
+        </mxCell>
+        <mxCell id="edge-b5-1" edge="1" parent="1" source="branch5" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#999999" target="b5-1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="b5-2" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontSize=11" value="IDT→LMT→RRT→ODT&#xa;转换流程" vertex="1">
+          <mxGeometry height="45" width="110" x="1120" y="480" as="geometry" />
+        </mxCell>
+        <mxCell id="edge-b5-2" edge="1" parent="1" source="branch5" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#999999" target="b5-2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="b5-3" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontSize=11" value="ACEScg&#xa;渲染工作空间" vertex="1">
+          <mxGeometry height="45" width="100" x="980" y="540" as="geometry" />
+        </mxCell>
+        <mxCell id="edge-b5-3" edge="1" parent="1" source="branch5" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#999999" target="b5-3">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="branch6" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d4e8ff;strokeColor=#6c8ebf;fontSize=14;fontStyle=1" value="游戏HDR实现" vertex="1">
+          <mxGeometry height="50" width="130" x="700" y="520" as="geometry" />
+        </mxCell>
+        <mxCell id="edge6" edge="1" parent="1" source="center" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#666666;strokeWidth=2" target="branch6">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="b6-1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontSize=11" value="HDR管线架构&#xa;渲染→后处理→输出" vertex="1">
+          <mxGeometry height="45" width="110" x="720" y="610" as="geometry" />
+        </mxCell>
+        <mxCell id="edge-b6-1" edge="1" parent="1" source="branch6" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#999999" target="b6-1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="b6-2" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontSize=11" value="Universal CLUT&#xa;3D LUT加速" vertex="1">
+          <mxGeometry height="45" width="100" x="580" y="560" as="geometry" />
+        </mxCell>
+        <mxCell id="edge-b6-2" edge="1" parent="1" source="branch6" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#999999" target="b6-2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="b6-3" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontSize=11" value="BT.2390 EETF&#xa;Range Reduction" vertex="1">
+          <mxGeometry height="45" width="100" x="580" y="620" as="geometry" />
+        </mxCell>
+        <mxCell id="edge-b6-3" edge="1" parent="1" source="branch6" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#999999" target="b6-3">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="branch7" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=14;fontStyle=1" value="色彩管理管线" vertex="1">
+          <mxGeometry height="50" width="130" x="420" y="450" as="geometry" />
+        </mxCell>
+        <mxCell id="edge7" edge="1" parent="1" source="center" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#666666;strokeWidth=2" target="branch7">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="b7-1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontSize=11" value="线性工作流&#xa;Scene-Referred" vertex="1">
+          <mxGeometry height="45" width="100" x="280" y="400" as="geometry" />
+        </mxCell>
+        <mxCell id="edge-b7-1" edge="1" parent="1" source="branch7" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#999999" target="b7-1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="b7-2" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontSize=11" value="广色域中间空间&#xa;ACEScg/Rec.2020" vertex="1">
+          <mxGeometry height="45" width="110" x="280" y="470" as="geometry" />
+        </mxCell>
+        <mxCell id="edge-b7-2" edge="1" parent="1" source="branch7" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#999999" target="b7-2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="b7-3" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontSize=11" value="资产制作规范&#xa;纹理/HDR环境贴图" vertex="1">
+          <mxGeometry height="45" width="110" x="400" y="540" as="geometry" />
+        </mxCell>
+        <mxCell id="edge-b7-3" edge="1" parent="1" source="branch7" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#999999" target="b7-3">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="branch8" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e6d5ff;strokeColor=#9966cc;fontSize=14;fontStyle=1" value="总结与展望" vertex="1">
+          <mxGeometry height="50" width="120" x="480" y="280" as="geometry" />
+        </mxCell>
+        <mxCell id="edge8" edge="1" parent="1" source="center" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#666666;strokeWidth=2" target="branch8">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="b8-1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontSize=11" value="关键要点&#xa;颜色空间/传递函数/ACES" vertex="1">
+          <mxGeometry height="45" width="110" x="320" y="280" as="geometry" />
+        </mxCell>
+        <mxCell id="edge-b8-1" edge="1" parent="1" source="branch8" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#999999" target="b8-1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="b8-2" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontSize=11" value="未来趋势&#xa;4000+nit/AI色调映射" vertex="1">
+          <mxGeometry height="45" width="110" x="480" y="200" as="geometry" />
+        </mxCell>
+        <mxCell id="edge-b8-2" edge="1" parent="1" source="branch8" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#999999" target="b8-2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="compare-box" parent="1" style="swimlane;whiteSpace=wrap;html=1;fillColor=#f0f0f0;strokeColor=#666666;fontSize=12;fontStyle=1" value="SDR vs HDR 对比" vertex="1">
+          <mxGeometry height="140" width="180" x="50" y="250" as="geometry" />
+        </mxCell>
+        <mxCell id="compare-sdr" parent="compare-box" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;whiteSpace=wrap;fontSize=10" value="SDR&#xa;• 35.9% CIE 1931&#xa;• 100-300 nit&#xa;• 8-bit&#xa;• Gamma 2.2" vertex="1">
+          <mxGeometry height="90" width="70" x="10" y="30" as="geometry" />
+        </mxCell>
+        <mxCell id="compare-hdr" parent="compare-box" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;whiteSpace=wrap;fontSize=10" value="HDR&#xa;• 75.8% CIE 1931&#xa;• 1000-10000 nit&#xa;• 10/12-bit&#xa;• PQ/HLG" vertex="1">
+          <mxGeometry height="90" width="75" x="95" y="30" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
