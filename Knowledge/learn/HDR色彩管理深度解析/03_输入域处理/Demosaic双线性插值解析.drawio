@@ -1,0 +1,344 @@
+<mxfile host="app.diagrams.net" agent="draw.io" version="24.0.0">
+  <diagram name="Demosaic双线性插值" id="demosaic-bilinear">
+    <mxGraphModel dx="1200" dy="900" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" pageScale="1" pageWidth="1600" pageHeight="1200" math="0" shadow="0">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+
+        <!-- ========== 标题 ========== -->
+        <mxCell id="title" value="&lt;font style=&quot;font-size:24px;&quot;&gt;&lt;b&gt;Demosaic 双线性插值原理&lt;/b&gt;&lt;/font&gt;&lt;br&gt;&lt;font style=&quot;font-size:14px;color:#666666;&quot;&gt;从 Bayer 单通道马赛克恢复 RGB 三通道图像&lt;/font&gt;" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="440" y="20" width="420" height="60" as="geometry"/>
+        </mxCell>
+
+        <!-- ========== 顶部总流程 ========== -->
+        <!-- Bayer输入框 -->
+        <mxCell id="flow_input" value="&lt;b&gt;Bayer RAW&lt;/b&gt;&lt;br&gt;每像素仅1个颜色通道" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontColor=#333333;fontSize=13;arcSize=20;" vertex="1" parent="1">
+          <mxGeometry x="140" y="100" width="200" height="60" as="geometry"/>
+        </mxCell>
+
+        <!-- 处理框 -->
+        <mxCell id="flow_process" value="&lt;b&gt;双线性插值&lt;/b&gt;&lt;br&gt;对缺失通道取邻域均值" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=13;arcSize=20;" vertex="1" parent="1">
+          <mxGeometry x="540" y="100" width="220" height="60" as="geometry"/>
+        </mxCell>
+
+        <!-- 输出框 -->
+        <mxCell id="flow_output" value="&lt;b&gt;完整 RGB&lt;/b&gt;&lt;br&gt;每像素具有R、G、B三通道" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=13;arcSize=20;" vertex="1" parent="1">
+          <mxGeometry x="960" y="100" width="220" height="60" as="geometry"/>
+        </mxCell>
+
+        <!-- 流程箭头 -->
+        <mxCell id="arrow1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jetSize=auto;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;strokeWidth=2;strokeColor=#333333;" edge="1" source="flow_input" target="flow_process" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="arrow2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jetSize=auto;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;strokeWidth=2;strokeColor=#333333;" edge="1" source="flow_process" target="flow_output" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+        <!-- ========== Bayer 示意图（左侧） ========== -->
+        <mxCell id="bayer_bg" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f9f9f9;strokeColor=#cccccc;strokeWidth=1;" vertex="1" parent="1">
+          <mxGeometry x="40" y="200" width="340" height="340" as="geometry"/>
+        </mxCell>
+        <mxCell id="bayer_title" value="&lt;b&gt;Bayer 排列 (RGGB)&lt;/b&gt;&lt;br&gt;&lt;font color=&quot;#888888&quot;&gt;每个像素只记录一个颜色&lt;/font&gt;" style="text;html=1;align=center;verticalAlign=top;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;fontSize=13;" vertex="1" parent="1">
+          <mxGeometry x="80" y="210" width="260" height="45" as="geometry"/>
+        </mxCell>
+
+        <!-- Bayer 4x4 网格 -->
+        <!-- Row 0: R G R G -->
+        <mxCell id="b00" value="&lt;b&gt;R&lt;/b&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=16;fontColor=#b85450;" vertex="1" parent="1">
+          <mxGeometry x="90" y="270" width="55" height="55" as="geometry"/>
+        </mxCell>
+        <mxCell id="b01" value="&lt;b&gt;G&lt;/b&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=16;fontColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="145" y="270" width="55" height="55" as="geometry"/>
+        </mxCell>
+        <mxCell id="b02" value="&lt;b&gt;R&lt;/b&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=16;fontColor=#b85450;" vertex="1" parent="1">
+          <mxGeometry x="200" y="270" width="55" height="55" as="geometry"/>
+        </mxCell>
+        <mxCell id="b03" value="&lt;b&gt;G&lt;/b&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=16;fontColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="255" y="270" width="55" height="55" as="geometry"/>
+        </mxCell>
+
+        <!-- Row 1: G B G B -->
+        <mxCell id="b10" value="&lt;b&gt;G&lt;/b&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=16;fontColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="90" y="325" width="55" height="55" as="geometry"/>
+        </mxCell>
+        <mxCell id="b11" value="&lt;b&gt;B&lt;/b&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=16;fontColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="145" y="325" width="55" height="55" as="geometry"/>
+        </mxCell>
+        <mxCell id="b12" value="&lt;b&gt;G&lt;/b&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=16;fontColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="200" y="325" width="55" height="55" as="geometry"/>
+        </mxCell>
+        <mxCell id="b13" value="&lt;b&gt;B&lt;/b&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=16;fontColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="255" y="325" width="55" height="55" as="geometry"/>
+        </mxCell>
+
+        <!-- Row 2: R G R G -->
+        <mxCell id="b20" value="&lt;b&gt;R&lt;/b&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=16;fontColor=#b85450;" vertex="1" parent="1">
+          <mxGeometry x="90" y="380" width="55" height="55" as="geometry"/>
+        </mxCell>
+        <mxCell id="b21" value="&lt;b&gt;G&lt;/b&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=16;fontColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="145" y="380" width="55" height="55" as="geometry"/>
+        </mxCell>
+        <mxCell id="b22" value="&lt;b&gt;R&lt;/b&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=16;fontColor=#b85450;" vertex="1" parent="1">
+          <mxGeometry x="200" y="380" width="55" height="55" as="geometry"/>
+        </mxCell>
+        <mxCell id="b23" value="&lt;b&gt;G&lt;/b&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=16;fontColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="255" y="380" width="55" height="55" as="geometry"/>
+        </mxCell>
+
+        <!-- Row 3: G B G B -->
+        <mxCell id="b30" value="&lt;b&gt;G&lt;/b&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=16;fontColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="90" y="435" width="55" height="55" as="geometry"/>
+        </mxCell>
+        <mxCell id="b31" value="&lt;b&gt;B&lt;/b&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=16;fontColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="145" y="435" width="55" height="55" as="geometry"/>
+        </mxCell>
+        <mxCell id="b32" value="&lt;b&gt;G&lt;/b&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=16;fontColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="200" y="435" width="55" height="55" as="geometry"/>
+        </mxCell>
+        <mxCell id="b33" value="&lt;b&gt;B&lt;/b&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=16;fontColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="255" y="435" width="55" height="55" as="geometry"/>
+        </mxCell>
+
+        <!-- 颜色占比说明 -->
+        <mxCell id="bayer_note" value="&lt;font color=&quot;#b85450&quot;&gt;■ R 占25%&lt;/font&gt;　&lt;font color=&quot;#82b366&quot;&gt;■ G 占50%&lt;/font&gt;　&lt;font color=&quot;#6c8ebf&quot;&gt;■ B 占25%&lt;/font&gt;" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="80" y="500" width="280" height="30" as="geometry"/>
+        </mxCell>
+
+        <!-- ========== 情况一：在R位置插值G ========== -->
+        <mxCell id="case1_bg" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f0fff0;strokeColor=#82b366;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="420" y="200" width="360" height="340" as="geometry"/>
+        </mxCell>
+        <mxCell id="case1_title" value="&lt;b&gt;情况一：在 R 位置插值 G 通道&lt;/b&gt;&lt;br&gt;&lt;font color=&quot;#666666&quot;&gt;十字形四邻域取平均&lt;/font&gt;" style="text;html=1;align=center;verticalAlign=top;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;fontSize=13;" vertex="1" parent="1">
+          <mxGeometry x="460" y="210" width="280" height="45" as="geometry"/>
+        </mxCell>
+
+        <!-- 3x3 kernel 网格 -->
+        <!-- Row 0: ? G0 ? -->
+        <mxCell id="c1_00" value="?" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#cccccc;fontSize=14;fontColor=#999999;" vertex="1" parent="1">
+          <mxGeometry x="490" y="270" width="55" height="55" as="geometry"/>
+        </mxCell>
+        <mxCell id="c1_01" value="&lt;b&gt;G₀&lt;/b&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=15;fontColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="545" y="270" width="55" height="55" as="geometry"/>
+        </mxCell>
+        <mxCell id="c1_02" value="?" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#cccccc;fontSize=14;fontColor=#999999;" vertex="1" parent="1">
+          <mxGeometry x="600" y="270" width="55" height="55" as="geometry"/>
+        </mxCell>
+
+        <!-- Row 1: G1 R(target) G2 -->
+        <mxCell id="c1_10" value="&lt;b&gt;G₁&lt;/b&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=15;fontColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="490" y="325" width="55" height="55" as="geometry"/>
+        </mxCell>
+        <mxCell id="c1_11" value="&lt;b&gt;R&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:10px;color:#FF6666;&quot;&gt;目标&lt;/font&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=16;fontColor=#b85450;strokeWidth=3;" vertex="1" parent="1">
+          <mxGeometry x="545" y="325" width="55" height="55" as="geometry"/>
+        </mxCell>
+        <mxCell id="c1_12" value="&lt;b&gt;G₂&lt;/b&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=15;fontColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="600" y="325" width="55" height="55" as="geometry"/>
+        </mxCell>
+
+        <!-- Row 2: ? G3 ? -->
+        <mxCell id="c1_20" value="?" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#cccccc;fontSize=14;fontColor=#999999;" vertex="1" parent="1">
+          <mxGeometry x="490" y="380" width="55" height="55" as="geometry"/>
+        </mxCell>
+        <mxCell id="c1_21" value="&lt;b&gt;G₃&lt;/b&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=15;fontColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="545" y="380" width="55" height="55" as="geometry"/>
+        </mxCell>
+        <mxCell id="c1_22" value="?" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#cccccc;fontSize=14;fontColor=#999999;" vertex="1" parent="1">
+          <mxGeometry x="600" y="380" width="55" height="55" as="geometry"/>
+        </mxCell>
+
+        <!-- 箭头：G0/G1/G2/G3 → R -->
+        <mxCell id="c1_arrow_top" style="endArrow=classic;html=1;strokeColor=#82b366;strokeWidth=2;entryX=0.5;entryY=0;entryDx=0;entryDy=0;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" edge="1" source="c1_01" target="c1_11" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="c1_arrow_left" style="endArrow=classic;html=1;strokeColor=#82b366;strokeWidth=2;entryX=0;entryY=0.5;entryDx=0;entryDy=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;" edge="1" source="c1_10" target="c1_11" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="c1_arrow_right" style="endArrow=classic;html=1;strokeColor=#82b366;strokeWidth=2;entryX=1;entryY=0.5;entryDx=0;entryDy=0;exitX=0;exitY=0.5;exitDx=0;exitDy=0;" edge="1" source="c1_12" target="c1_11" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="c1_arrow_bottom" style="endArrow=classic;html=1;strokeColor=#82b366;strokeWidth=2;entryX=0.5;entryY=1;entryDx=0;entryDy=0;exitX=0.5;exitY=0;exitDx=0;exitDy=0;" edge="1" source="c1_21" target="c1_11" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+        <!-- 公式 -->
+        <mxCell id="c1_formula" value="&lt;font style=&quot;font-size:14px;&quot;&gt;&lt;b&gt;G = (G₀ + G₁ + G₂ + G₃) / 4&lt;/b&gt;&lt;/font&gt;" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;fontColor=#2d7600;" vertex="1" parent="1">
+          <mxGeometry x="465" y="450" width="280" height="30" as="geometry"/>
+        </mxCell>
+        <mxCell id="c1_note" value="&lt;font color=&quot;#888888&quot;&gt;同理：在 B 位置插值 G 也取十字形均值&lt;/font&gt;" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="475" y="480" width="260" height="25" as="geometry"/>
+        </mxCell>
+
+        <!-- ========== 情况二：在B位置插值R（对角线） ========== -->
+        <mxCell id="case2_bg" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff0f0;strokeColor=#b85450;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="820" y="200" width="360" height="340" as="geometry"/>
+        </mxCell>
+        <mxCell id="case2_title" value="&lt;b&gt;情况二：在 B 位置插值 R 通道&lt;/b&gt;&lt;br&gt;&lt;font color=&quot;#666666&quot;&gt;对角线四邻域取平均&lt;/font&gt;" style="text;html=1;align=center;verticalAlign=top;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;fontSize=13;" vertex="1" parent="1">
+          <mxGeometry x="860" y="210" width="280" height="45" as="geometry"/>
+        </mxCell>
+
+        <!-- 3x3 kernel: R at corners, B at center -->
+        <!-- Row 0: R0 ? R1 -->
+        <mxCell id="c2_00" value="&lt;b&gt;R₀&lt;/b&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=15;fontColor=#b85450;" vertex="1" parent="1">
+          <mxGeometry x="890" y="270" width="55" height="55" as="geometry"/>
+        </mxCell>
+        <mxCell id="c2_01" value="G" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#cccccc;fontSize=14;fontColor=#999999;" vertex="1" parent="1">
+          <mxGeometry x="945" y="270" width="55" height="55" as="geometry"/>
+        </mxCell>
+        <mxCell id="c2_02" value="&lt;b&gt;R₁&lt;/b&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=15;fontColor=#b85450;" vertex="1" parent="1">
+          <mxGeometry x="1000" y="270" width="55" height="55" as="geometry"/>
+        </mxCell>
+
+        <!-- Row 1: ? B(target) ? -->
+        <mxCell id="c2_10" value="G" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#cccccc;fontSize=14;fontColor=#999999;" vertex="1" parent="1">
+          <mxGeometry x="890" y="325" width="55" height="55" as="geometry"/>
+        </mxCell>
+        <mxCell id="c2_11" value="&lt;b&gt;B&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:10px;color:#6c8ebf;&quot;&gt;目标&lt;/font&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=16;fontColor=#6c8ebf;strokeWidth=3;" vertex="1" parent="1">
+          <mxGeometry x="945" y="325" width="55" height="55" as="geometry"/>
+        </mxCell>
+        <mxCell id="c2_12" value="G" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#cccccc;fontSize=14;fontColor=#999999;" vertex="1" parent="1">
+          <mxGeometry x="1000" y="325" width="55" height="55" as="geometry"/>
+        </mxCell>
+
+        <!-- Row 2: R2 ? R3 -->
+        <mxCell id="c2_20" value="&lt;b&gt;R₂&lt;/b&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=15;fontColor=#b85450;" vertex="1" parent="1">
+          <mxGeometry x="890" y="380" width="55" height="55" as="geometry"/>
+        </mxCell>
+        <mxCell id="c2_21" value="G" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#cccccc;fontSize=14;fontColor=#999999;" vertex="1" parent="1">
+          <mxGeometry x="945" y="380" width="55" height="55" as="geometry"/>
+        </mxCell>
+        <mxCell id="c2_22" value="&lt;b&gt;R₃&lt;/b&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=15;fontColor=#b85450;" vertex="1" parent="1">
+          <mxGeometry x="1000" y="380" width="55" height="55" as="geometry"/>
+        </mxCell>
+
+        <!-- 对角线箭头 -->
+        <mxCell id="c2_arrow_tl" style="endArrow=classic;html=1;strokeColor=#b85450;strokeWidth=2;exitX=1;exitY=1;exitDx=0;exitDy=0;entryX=0;entryY=0;entryDx=0;entryDy=0;" edge="1" source="c2_00" target="c2_11" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="c2_arrow_tr" style="endArrow=classic;html=1;strokeColor=#b85450;strokeWidth=2;exitX=0;exitY=1;exitDx=0;exitDy=0;entryX=1;entryY=0;entryDx=0;entryDy=0;" edge="1" source="c2_02" target="c2_11" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="c2_arrow_bl" style="endArrow=classic;html=1;strokeColor=#b85450;strokeWidth=2;exitX=1;exitY=0;exitDx=0;exitDy=0;entryX=0;entryY=1;entryDx=0;entryDy=0;" edge="1" source="c2_20" target="c2_11" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="c2_arrow_br" style="endArrow=classic;html=1;strokeColor=#b85450;strokeWidth=2;exitX=0;exitY=0;exitDx=0;exitDy=0;entryX=1;entryY=1;entryDx=0;entryDy=0;" edge="1" source="c2_22" target="c2_11" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+        <!-- 公式 -->
+        <mxCell id="c2_formula" value="&lt;font style=&quot;font-size:14px;&quot;&gt;&lt;b&gt;R = (R₀ + R₁ + R₂ + R₃) / 4&lt;/b&gt;&lt;/font&gt;" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;fontColor=#ae4132;" vertex="1" parent="1">
+          <mxGeometry x="865" y="450" width="280" height="30" as="geometry"/>
+        </mxCell>
+        <mxCell id="c2_note" value="&lt;font color=&quot;#888888&quot;&gt;同理：在 R 位置插值 B 也取对角线均值&lt;/font&gt;" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="870" y="480" width="270" height="25" as="geometry"/>
+        </mxCell>
+
+        <!-- ========== 情况三：在G位置插值R（两邻域） ========== -->
+        <mxCell id="case3_bg" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff8f0;strokeColor=#d6b656;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="40" y="580" width="740" height="320" as="geometry"/>
+        </mxCell>
+        <mxCell id="case3_title" value="&lt;b&gt;情况三：在 G 位置插值 R 或 B 通道&lt;/b&gt;&lt;br&gt;&lt;font color=&quot;#666666&quot;&gt;根据所在行列方向，取水平或垂直两邻域均值&lt;/font&gt;" style="text;html=1;align=center;verticalAlign=top;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;fontSize=13;" vertex="1" parent="1">
+          <mxGeometry x="200" y="590" width="340" height="45" as="geometry"/>
+        </mxCell>
+
+        <!-- 子情况A：G在R行，插值R（水平） -->
+        <mxCell id="c3a_label" value="&lt;b&gt;G 在 R 行：水平插值 R&lt;/b&gt;" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;fontSize=12;fontColor=#b85450;" vertex="1" parent="1">
+          <mxGeometry x="80" y="645" width="180" height="25" as="geometry"/>
+        </mxCell>
+
+        <!-- 1x3 横向: R0 G(target) R1 -->
+        <mxCell id="c3a_0" value="&lt;b&gt;R₀&lt;/b&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=15;fontColor=#b85450;" vertex="1" parent="1">
+          <mxGeometry x="80" y="680" width="65" height="55" as="geometry"/>
+        </mxCell>
+        <mxCell id="c3a_1" value="&lt;b&gt;G&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:10px;color:#82b366;&quot;&gt;目标&lt;/font&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=16;fontColor=#82b366;strokeWidth=3;" vertex="1" parent="1">
+          <mxGeometry x="145" y="680" width="65" height="55" as="geometry"/>
+        </mxCell>
+        <mxCell id="c3a_2" value="&lt;b&gt;R₁&lt;/b&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=15;fontColor=#b85450;" vertex="1" parent="1">
+          <mxGeometry x="210" y="680" width="65" height="55" as="geometry"/>
+        </mxCell>
+
+        <!-- 箭头 -->
+        <mxCell id="c3a_arrow_l" style="endArrow=classic;html=1;strokeColor=#b85450;strokeWidth=2;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" source="c3a_0" target="c3a_1" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="c3a_arrow_r" style="endArrow=classic;html=1;strokeColor=#b85450;strokeWidth=2;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" edge="1" source="c3a_2" target="c3a_1" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="c3a_formula" value="&lt;b&gt;R = (R₀ + R₁) / 2&lt;/b&gt;" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;fontSize=13;fontColor=#ae4132;" vertex="1" parent="1">
+          <mxGeometry x="95" y="745" width="160" height="25" as="geometry"/>
+        </mxCell>
+
+        <!-- 子情况B：G在B行，插值B（水平） -->
+        <mxCell id="c3b_label" value="&lt;b&gt;G 在 B 列：垂直插值 B&lt;/b&gt;" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;fontSize=12;fontColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="460" y="645" width="180" height="25" as="geometry"/>
+        </mxCell>
+
+        <!-- 3x1 纵向: B0 / G(target) / B1 -->
+        <mxCell id="c3b_0" value="&lt;b&gt;B₀&lt;/b&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=15;fontColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="510" y="675" width="65" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="c3b_1" value="&lt;b&gt;G&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:10px;color:#82b366;&quot;&gt;目标&lt;/font&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=16;fontColor=#82b366;strokeWidth=3;" vertex="1" parent="1">
+          <mxGeometry x="510" y="725" width="65" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="c3b_2" value="&lt;b&gt;B₁&lt;/b&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=15;fontColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="510" y="775" width="65" height="50" as="geometry"/>
+        </mxCell>
+
+        <!-- 箭头 -->
+        <mxCell id="c3b_arrow_t" style="endArrow=classic;html=1;strokeColor=#6c8ebf;strokeWidth=2;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" source="c3b_0" target="c3b_1" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="c3b_arrow_b" style="endArrow=classic;html=1;strokeColor=#6c8ebf;strokeWidth=2;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" edge="1" source="c3b_2" target="c3b_1" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="c3b_formula" value="&lt;b&gt;B = (B₀ + B₁) / 2&lt;/b&gt;" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;fontSize=13;fontColor=#336699;" vertex="1" parent="1">
+          <mxGeometry x="480" y="835" width="155" height="25" as="geometry"/>
+        </mxCell>
+
+        <!-- 情况三说明 -->
+        <mxCell id="c3_note" value="&lt;font color=&quot;#888888&quot;&gt;G 位置同时需要插值 R 和 B 两个通道，方向取决于该 G 相邻的同色像素排列&lt;/font&gt;" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="120" y="870" width="520" height="20" as="geometry"/>
+        </mxCell>
+
+        <!-- ========== 问题与局限 ========== -->
+        <mxCell id="problem_bg" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="820" y="580" width="360" height="320" as="geometry"/>
+        </mxCell>
+        <mxCell id="problem_title" value="&lt;b&gt;双线性插值的局限性&lt;/b&gt;" style="text;html=1;align=center;verticalAlign=top;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;fontSize=14;fontColor=#b85450;" vertex="1" parent="1">
+          <mxGeometry x="905" y="595" width="170" height="30" as="geometry"/>
+        </mxCell>
+
+        <!-- 问题1 -->
+        <mxCell id="p1_icon" value="⚠️" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;fontSize=18;" vertex="1" parent="1">
+          <mxGeometry x="840" y="640" width="40" height="35" as="geometry"/>
+        </mxCell>
+        <mxCell id="p1_text" value="&lt;b&gt;拉链伪影&lt;/b&gt;（Zipper Artifact）&lt;br&gt;跨越物体边缘插值时，边缘两侧&lt;br&gt;像素混合，产生锯齿状条纹" style="text;html=1;align=left;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="880" y="632" width="260" height="55" as="geometry"/>
+        </mxCell>
+
+        <!-- 问题2 -->
+        <mxCell id="p2_icon" value="⚠️" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;fontSize=18;" vertex="1" parent="1">
+          <mxGeometry x="840" y="710" width="40" height="35" as="geometry"/>
+        </mxCell>
+        <mxCell id="p2_text" value="&lt;b&gt;伪色&lt;/b&gt;（False Color）&lt;br&gt;高频纹理区域不同通道采样不同步，&lt;br&gt;重建后出现不存在的彩色条纹" style="text;html=1;align=left;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="880" y="700" width="280" height="55" as="geometry"/>
+        </mxCell>
+
+        <!-- 问题3 -->
+        <mxCell id="p3_icon" value="⚠️" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;fontSize=18;" vertex="1" parent="1">
+          <mxGeometry x="840" y="780" width="40" height="35" as="geometry"/>
+        </mxCell>
+        <mxCell id="p3_text" value="&lt;b&gt;模糊&lt;/b&gt;（Blurring）&lt;br&gt;取均值操作本质是低通滤波，&lt;br&gt;抹平了高频细节，导致画面不锐利" style="text;html=1;align=left;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="880" y="770" width="280" height="55" as="geometry"/>
+        </mxCell>
+
+        <!-- 底部总结 -->
+        <mxCell id="p_summary" value="&lt;font color=&quot;#888888&quot;&gt;这些问题促使了更高级算法的出现：&lt;br&gt;边缘自适应插值、AHD、VNG、LMMSE 等&lt;/font&gt;" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="875" y="845" width="260" height="40" as="geometry"/>
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

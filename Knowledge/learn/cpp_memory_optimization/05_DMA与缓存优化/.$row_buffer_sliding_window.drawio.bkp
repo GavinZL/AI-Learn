@@ -1,0 +1,153 @@
+<mxfile host="Electron" agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/28.2.8 Chrome/140.0.7339.240 Electron/38.4.0 Safari/537.36" version="28.2.8">
+  <diagram name="行缓存滑动窗口算法" id="row-buffer-sliding-window">
+    <mxGraphModel dx="1018" dy="781" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1200" pageHeight="800" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="title" value="&lt;b&gt;行缓存 + 滑动窗口算法&lt;/b&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=24;fontFamily=Noto Sans JP;" parent="1" vertex="1">
+          <mxGeometry x="400" y="20" width="400" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="image-bg" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;strokeWidth=2;" parent="1" vertex="1">
+          <mxGeometry x="50" y="100" width="350" height="400" as="geometry" />
+        </mxCell>
+        <mxCell id="image-label" value="原始图像 (Image)" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=16;fontFamily=Noto Sans JP;fontStyle=1" parent="1" vertex="1">
+          <mxGeometry x="150" y="110" width="150" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="pixel-grid" value="" style="group" parent="1" vertex="1" connectable="0">
+          <mxGeometry x="80" y="150" width="290" height="320" as="geometry" />
+        </mxCell>
+        <mxCell id="row0" value="Row 0: ████████" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=12;fontFamily=monospace;" parent="pixel-grid" vertex="1">
+          <mxGeometry width="290" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="row1" value="Row 1: ████████" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=12;fontFamily=monospace;" parent="pixel-grid" vertex="1">
+          <mxGeometry y="20" width="290" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="row2" value="Row 2: ████████" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=12;fontFamily=monospace;" parent="pixel-grid" vertex="1">
+          <mxGeometry y="40" width="290" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="row3" value="Row 3: ████████" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=12;fontFamily=monospace;" parent="pixel-grid" vertex="1">
+          <mxGeometry y="60" width="290" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="row4" value="Row 4: ███&lt;font color=#ff0000&gt;▓▓▓&lt;/font&gt;███ ← 当前处理行" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=12;fontFamily=monospace;" parent="pixel-grid" vertex="1">
+          <mxGeometry y="80" width="290" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="row5" value="Row 5: ████████" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=12;fontFamily=monospace;" parent="pixel-grid" vertex="1">
+          <mxGeometry y="100" width="290" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="row6" value="Row 6: ████████" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=12;fontFamily=monospace;" parent="pixel-grid" vertex="1">
+          <mxGeometry y="120" width="290" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="row7" value="..." style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=12;fontFamily=monospace;" parent="pixel-grid" vertex="1">
+          <mxGeometry y="140" width="290" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="row-n" value="Row N: ████████" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=12;fontFamily=monospace;" parent="pixel-grid" vertex="1">
+          <mxGeometry y="160" width="290" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="window-frame" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#ff0000;strokeWidth=3;dashed=1;" parent="1" vertex="1">
+          <mxGeometry x="80" y="150" width="290" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="window-label" value="滑动窗口&lt;br&gt;(diameter=5)" style="text;html=1;strokeColor=none;fillColor=#ffcccc;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=1;fontSize=11;fontFamily=Noto Sans JP;" parent="1" vertex="1">
+          <mxGeometry x="10" y="190" width="70" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="row-buffer-bg" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1f5fe;strokeColor=#01579b;strokeWidth=2;" parent="1" vertex="1">
+          <mxGeometry x="450" y="100" width="350" height="250" as="geometry" />
+        </mxCell>
+        <mxCell id="row-buffer-label" value="行缓存 (Row Sums)" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=16;fontFamily=Noto Sans JP;fontStyle=1" parent="1" vertex="1">
+          <mxGeometry x="540" y="110" width="170" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="buffer-content" value="" style="group" parent="1" vertex="1" connectable="0">
+          <mxGeometry x="480" y="150" width="290" height="180" as="geometry" />
+        </mxCell>
+        <mxCell id="buf-row0" value="row_sums[0]: [R,G,B][R,G,B][R,G,B]..." style="text;html=1;strokeColor=none;fillColor=#ffffff;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=1;fontSize=11;fontFamily=monospace;spacingLeft=5;" parent="buffer-content" vertex="1">
+          <mxGeometry width="290" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="buf-row1" value="row_sums[1]: [R,G,B][R,G,B][R,G,B]..." style="text;html=1;strokeColor=none;fillColor=#ffffff;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=1;fontSize=11;fontFamily=monospace;spacingLeft=5;" parent="buffer-content" vertex="1">
+          <mxGeometry y="35" width="290" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="buf-row2" value="row_sums[2]: [R,G,B][R,G,B][R,G,B]..." style="text;html=1;strokeColor=none;fillColor=#ffffff;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=1;fontSize=11;fontFamily=monospace;spacingLeft=5;" parent="buffer-content" vertex="1">
+          <mxGeometry y="70" width="290" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="buf-row3" value="row_sums[3]: [R,G,B][R,G,B][R,G,B]..." style="text;html=1;strokeColor=none;fillColor=#ffffff;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=1;fontSize=11;fontFamily=monospace;spacingLeft=5;" parent="buffer-content" vertex="1">
+          <mxGeometry y="105" width="290" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="buf-row4" value="row_sums[4]: [R,G,B][R,G,B][R,G,B]..." style="text;html=1;strokeColor=none;fillColor=#fff9c4;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=1;fontSize=11;fontFamily=monospace;spacingLeft=5;" parent="buffer-content" vertex="1">
+          <mxGeometry y="140" width="290" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="buffer-desc" value="&lt;font style=&quot;font-size: 12px;&quot;&gt;预计算每行的 RGB 累加和&lt;br&gt;避免重复访问原始像素&lt;/font&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=10;fontFamily=Noto Sans JP;" parent="1" vertex="1">
+          <mxGeometry x="540" y="300" width="170" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="process-bg" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f3e5f5;strokeColor=#7b1fa2;strokeWidth=2;" parent="1" vertex="1">
+          <mxGeometry x="850" y="100" width="320" height="400" as="geometry" />
+        </mxCell>
+        <mxCell id="process-label" value="滑动窗口处理流程" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=16;fontFamily=Noto Sans JP;fontStyle=1" parent="1" vertex="1">
+          <mxGeometry x="935" y="110" width="150" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="step1" value="&lt;font&gt;1. 初始化行缓存&lt;br&gt;预计算前 diameter 行&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#7b1fa2;strokeWidth=1;fontSize=12;fontFamily=Noto Sans JP;align=center;verticalAlign=middle;" parent="1" vertex="1">
+          <mxGeometry x="870" y="150" width="280" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="step2" value="&lt;font&gt;2. 滑动窗口计算&lt;br&gt;利用行缓存累加，O(width) 而非 O(width×diameter²)&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#7b1fa2;strokeWidth=1;fontSize=12;fontFamily=Noto Sans JP;align=center;verticalAlign=middle;" parent="1" vertex="1">
+          <mxGeometry x="870" y="220" width="280" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="DtBYzH7gg4CX0FVUe1Kv-1" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="step3" target="buf-row4">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="step3" value="&lt;font&gt;3. 更新行缓存&lt;br&gt;移除最旧行，添加新行（循环队列）&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#7b1fa2;strokeWidth=1;fontSize=12;fontFamily=Noto Sans JP;align=center;verticalAlign=middle;" parent="1" vertex="1">
+          <mxGeometry x="870" y="290" width="280" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="step4" value="&lt;font&gt;4. 输出结果&lt;br&gt;写入输出图像&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#7b1fa2;strokeWidth=1;fontSize=12;fontFamily=Noto Sans JP;align=center;verticalAlign=middle;" parent="1" vertex="1">
+          <mxGeometry x="870" y="360" width="280" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="arrow1" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#7b1fa2;strokeWidth=2;" parent="1" source="step1" target="step2" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="arrow2" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#7b1fa2;strokeWidth=2;" parent="1" source="step2" target="step3" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="arrow3" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#7b1fa2;strokeWidth=2;" parent="1" source="step3" target="step4" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="conn1" value="预计算" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#666666;strokeWidth=2;fontSize=11;fontFamily=Noto Sans JP;" parent="1" source="image-bg" target="row-buffer-bg" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="425" y="225" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="conn2" value="读取" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#01579b;strokeWidth=2;fontSize=11;fontFamily=Noto Sans JP;" parent="1" source="row-buffer-bg" target="process-bg" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="825" y="225" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="complexity-bg" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff3e0;strokeColor=#e65100;strokeWidth=2;" parent="1" vertex="1">
+          <mxGeometry x="50" y="530" width="1120" height="200" as="geometry" />
+        </mxCell>
+        <mxCell id="complexity-title" value="复杂度对比" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=18;fontFamily=Noto Sans JP;fontStyle=1" parent="1" vertex="1">
+          <mxGeometry x="520" y="540" width="180" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="traditional" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffebee;strokeColor=#c62828;strokeWidth=1;" parent="1" vertex="1">
+          <mxGeometry x="80" y="580" width="480" height="130" as="geometry" />
+        </mxCell>
+        <mxCell id="trad-label" value="❌ 传统方法：直接访问像素" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=14;fontFamily=Noto Sans JP;fontStyle=1" parent="1" vertex="1">
+          <mxGeometry x="220" y="590" width="200" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="trad-complexity" value="时间复杂度: O(height × width × diameter²)&lt;br&gt;空间复杂度: O(1)&lt;br&gt;缓存命中率: 低（重复访问同一像素多次）" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=11;fontFamily=Noto Sans JP;" parent="1" vertex="1">
+          <mxGeometry x="100" y="625" width="440" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="optimized" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e8f5e9;strokeColor=#2e7d32;strokeWidth=1;" parent="1" vertex="1">
+          <mxGeometry x="590" y="580" width="550" height="130" as="geometry" />
+        </mxCell>
+        <mxCell id="opt-label" value="✅ 行缓存 + 滑动窗口" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=14;fontFamily=Noto Sans JP;fontStyle=1" parent="1" vertex="1">
+          <mxGeometry x="765" y="590" width="200" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="opt-complexity" value="时间复杂度: O(height × width)&lt;br&gt;空间复杂度: O(diameter × width × 3) ≈ 行缓存&lt;br&gt;缓存命中率: 高（每行只访问一次，后续从缓存读取）" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=11;fontFamily=Noto Sans JP;" parent="1" vertex="1">
+          <mxGeometry x="610" y="625" width="510" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="advantage" value="&lt;b&gt;关键优势：&lt;/b&gt;将 O(diameter²) 的重复计算转化为 O(1) 的缓存读取，&lt;br&gt;特别适合大直径滤波器（如高斯模糊、中值滤波）" style="text;html=1;strokeColor=none;fillColor=#fff9c4;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=1;fontSize=12;fontFamily=Noto Sans JP;" parent="1" vertex="1">
+          <mxGeometry x="300" y="750" width="600" height="40" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

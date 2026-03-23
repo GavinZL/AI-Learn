@@ -1,0 +1,171 @@
+<mxfile host="Electron" agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/28.2.8 Chrome/140.0.7339.240 Electron/38.4.0 Safari/537.36" version="28.2.8">
+  <diagram name="光度学四概念区分" id="photometric-concepts">
+    <mxGraphModel dx="1018" dy="781" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1200" pageHeight="900" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="title" value="&lt;b&gt;光度学四概念区分图解&lt;/b&gt;&lt;br&gt;光通量 · 发光强度 · 照度 · 亮度" style="text;html=1;strokeColor=none;fillColor=none;fontSize=18;fontFamily=Noto Sans SC;align=center;verticalAlign=middle;" parent="1" vertex="1">
+          <mxGeometry x="350" y="20" width="500" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="light-source" value="" style="ellipse;fillColor=#FFD700;strokeColor=#FF8C00;strokeWidth=3;" parent="1" vertex="1">
+          <mxGeometry x="550" y="200" width="100" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="light-label" value="&lt;font style=&quot;font-size: 14px;&quot;&gt;💡 光源&lt;br&gt;(灯泡/太阳/&lt;font style=&quot;&quot;&gt;LED&lt;/font&gt;)&lt;/font&gt;" style="text;html=1;strokeColor=none;fillColor=none;fontSize=8;fontFamily=Noto Sans SC;align=center;" parent="1" vertex="1">
+          <mxGeometry x="560" y="230" width="80" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="rays" value="" style="shape=mxgraph.basic.arc;fillColor=none;strokeColor=#FFD700;strokeWidth=2;startAngle=0.2;endAngle=0.8;" parent="1" vertex="1">
+          <mxGeometry x="500" y="150" width="200" height="200" as="geometry" />
+        </mxCell>
+        <mxCell id="flux-box" value="" style="rounded=1;fillColor=#E3F2FD;strokeColor=#1976D2;strokeWidth=2;" parent="1" vertex="1">
+          <mxGeometry x="50" y="120" width="280" height="180" as="geometry" />
+        </mxCell>
+        <mxCell id="flux-title" value="&lt;b&gt;① 光通量 (Luminous Flux)&lt;/b&gt;" style="text;html=1;strokeColor=none;fillColor=none;fontSize=9;fontFamily=Noto Sans SC;align=center;fontColor=#1976D2;" parent="1" vertex="1">
+          <mxGeometry x="60" y="130" width="260" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="flux-symbol" value="Φᵥ" style="text;html=1;strokeColor=none;fillColor=none;fontSize=14;fontFamily=Noto Sans SC;align=center;fontColor=#1976D2;" parent="1" vertex="1">
+          <mxGeometry x="60" y="150" width="40" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="flux-unit" value="单位：流明 (lm)" style="text;html=1;strokeColor=none;fillColor=none;fontSize=9;fontFamily=Noto Sans SC;align=left;fontColor=#333;" parent="1" vertex="1">
+          <mxGeometry x="100" y="155" width="100" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="flux-desc" value="&lt;font style=&quot;font-size: 12px;&quot;&gt;• 光源向&lt;b style=&quot;&quot;&gt;所有方向&lt;/b&gt;发出的&lt;br&gt;总光功率（人眼感知）&lt;br&gt;&lt;br&gt;• 类比：水龙头的&lt;b style=&quot;&quot;&gt;总出水量&lt;/b&gt;&lt;br&gt;• 与方向无关，是标量&lt;br&gt;&lt;br&gt;• 公式：Φᵥ = ∫ Iᵥ dΩ&lt;/font&gt;" style="text;html=1;strokeColor=none;fillColor=none;fontSize=8;fontFamily=Noto Sans SC;align=left;" parent="1" vertex="1">
+          <mxGeometry x="50" y="185" width="260" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="flux-arrow" style="edgeStyle=none;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#1976D2;strokeWidth=2;endArrow=block;endFill=1;" parent="1" source="flux-box" target="light-source" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="330" y="210" as="sourcePoint" />
+            <mxPoint x="550" y="250" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="flux-arrow-label" value="总输出" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=8;fontFamily=Noto Sans SC;" parent="flux-arrow" vertex="1" connectable="0">
+          <mxGeometry x="0.5" y="-15" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="intensity-box" value="" style="rounded=1;fillColor=#F3E5F5;strokeColor=#7B1FA2;strokeWidth=2;" parent="1" vertex="1">
+          <mxGeometry x="870" y="120" width="280" height="180" as="geometry" />
+        </mxCell>
+        <mxCell id="intensity-title" value="&lt;b&gt;② 发光强度 (Luminous Intensity)&lt;/b&gt;" style="text;html=1;strokeColor=none;fillColor=none;fontSize=9;fontFamily=Noto Sans SC;align=center;fontColor=#7B1FA2;" parent="1" vertex="1">
+          <mxGeometry x="880" y="130" width="260" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="intensity-symbol" value="Iᵥ" style="text;html=1;strokeColor=none;fillColor=none;fontSize=14;fontFamily=Noto Sans SC;align=center;fontColor=#7B1FA2;" parent="1" vertex="1">
+          <mxGeometry x="1000" y="145" width="40" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="intensity-unit" value="单位：坎德拉 (cd)" style="text;html=1;strokeColor=none;fillColor=none;fontSize=9;fontFamily=Noto Sans SC;align=left;fontColor=#333;" parent="1" vertex="1">
+          <mxGeometry x="1030" y="150" width="120" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="intensity-desc" value="&lt;font style=&quot;font-size: 12px;&quot;&gt;• 光源在&lt;b style=&quot;&quot;&gt;特定方向&lt;/b&gt;上的&lt;br&gt;发光能力（每立体角）&lt;br&gt;&lt;br&gt;• 类比：水枪在&lt;b style=&quot;&quot;&gt;某个方向&lt;/b&gt;的&lt;br&gt;喷射力度&lt;br&gt;&lt;br&gt;• 公式：Iᵥ = dΦᵥ/dΩ&lt;br&gt;• 与方向有关，有指向性&lt;/font&gt;" style="text;html=1;strokeColor=none;fillColor=none;fontSize=8;fontFamily=Noto Sans SC;align=left;" parent="1" vertex="1">
+          <mxGeometry x="890" y="175" width="260" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="intensity-arrow" style="edgeStyle=none;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#7B1FA2;strokeWidth=2;endArrow=block;endFill=1;" parent="1" source="light-source" target="intensity-box" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="650" y="250" as="sourcePoint" />
+            <mxPoint x="870" y="210" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="intensity-arrow-label" value="方向性输出" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=8;fontFamily=Noto Sans SC;" parent="intensity-arrow" vertex="1" connectable="0">
+          <mxGeometry x="0.5" y="-15" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="cone" value="" style="shape=mxgraph.basic.arc;fillColor=#F3E5F5;strokeColor=#7B1FA2;strokeWidth=2;startAngle=0.1;endAngle=0.4;opacity=30;" parent="1" vertex="1">
+          <mxGeometry x="680" y="180" width="120" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="cone-label" value="Ω (立体角)" style="text;html=1;strokeColor=none;fillColor=none;fontSize=8;fontFamily=Noto Sans SC;align=center;fontColor=#7B1FA2;" parent="1" vertex="1">
+          <mxGeometry x="720" y="220" width="80" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="illuminance-box" value="" style="rounded=1;fillColor=#E8F5E9;strokeColor=#388E3C;strokeWidth=2;" parent="1" vertex="1">
+          <mxGeometry x="50" y="450" width="280" height="180" as="geometry" />
+        </mxCell>
+        <mxCell id="illuminance-title" value="&lt;b&gt;③ 照度 (Illuminance)&lt;/b&gt;" style="text;html=1;strokeColor=none;fillColor=none;fontSize=9;fontFamily=Noto Sans SC;align=center;fontColor=#388E3C;" parent="1" vertex="1">
+          <mxGeometry x="60" y="460" width="260" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="illuminance-symbol" value="Eᵥ" style="text;html=1;strokeColor=none;fillColor=none;fontSize=14;fontFamily=Noto Sans SC;align=center;fontColor=#388E3C;" parent="1" vertex="1">
+          <mxGeometry x="60" y="480" width="40" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="illuminance-unit" value="单位：勒克斯 (lx) = lm/m²" style="text;html=1;strokeColor=none;fillColor=none;fontSize=9;fontFamily=Noto Sans SC;align=left;fontColor=#333;" parent="1" vertex="1">
+          <mxGeometry x="100" y="485" width="150" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="illuminance-desc" value="&lt;font style=&quot;font-size: 12px;&quot;&gt;• &lt;b style=&quot;&quot;&gt;被照面&lt;/b&gt;上单位面积接收的&lt;br&gt;光通量&lt;br&gt;&lt;br&gt;• 类比：地面单位面积&lt;br&gt;接收的&lt;b style=&quot;&quot;&gt;雨水量&lt;/b&gt;&lt;br&gt;&lt;br&gt;• 公式：Eᵥ = dΦᵥ/dA = Iᵥcosθ/r²&lt;br&gt;• 与距离平方成反比&lt;/font&gt;" style="text;html=1;strokeColor=none;fillColor=none;fontSize=8;fontFamily=Noto Sans SC;align=left;" parent="1" vertex="1">
+          <mxGeometry x="60" y="505" width="260" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="surface" value="" style="rounded=0;fillColor=#E8F5E9;strokeColor=#388E3C;strokeWidth=2;" parent="1" vertex="1">
+          <mxGeometry x="450" y="500" width="200" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="surface-label" value="📄 被照面&lt;br&gt;&lt;font style=&quot;font-size: 14px;&quot;&gt;(桌面/墙面/传感器)&lt;/font&gt;" style="text;html=1;strokeColor=none;fillColor=none;fontSize=7;fontFamily=Noto Sans SC;align=center;" parent="1" vertex="1">
+          <mxGeometry x="480" y="520" width="140" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="illuminance-arrow" style="edgeStyle=none;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#388E3C;strokeWidth=2;endArrow=block;endFill=1;dashed=1;" parent="1" source="light-source" target="surface" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="600" y="300" as="sourcePoint" />
+            <mxPoint x="550" y="500" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="illuminance-arrow-label" value="光线到达" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=8;fontFamily=Noto Sans SC;" parent="illuminance-arrow" vertex="1" connectable="0">
+          <mxGeometry x="0.5" y="10" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="illuminance-arrow2" style="edgeStyle=none;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#388E3C;strokeWidth=2;endArrow=block;endFill=1;" parent="1" source="surface" target="illuminance-box" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="450" y="540" as="sourcePoint" />
+            <mxPoint x="330" y="540" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="luminance-box" value="" style="rounded=1;fillColor=#FFF3E0;strokeColor=#F57C00;strokeWidth=2;" parent="1" vertex="1">
+          <mxGeometry x="870" y="450" width="280" height="180" as="geometry" />
+        </mxCell>
+        <mxCell id="luminance-title" value="&lt;b&gt;④ 亮度 (Luminance)&lt;/b&gt;" style="text;html=1;strokeColor=none;fillColor=none;fontSize=9;fontFamily=Noto Sans SC;align=center;fontColor=#F57C00;" parent="1" vertex="1">
+          <mxGeometry x="880" y="460" width="260" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="luminance-symbol" value="Lᵥ" style="text;html=1;strokeColor=none;fillColor=none;fontSize=14;fontFamily=Noto Sans SC;align=center;fontColor=#F57C00;" parent="1" vertex="1">
+          <mxGeometry x="880" y="475" width="40" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="luminance-unit" value="单位：cd/m² (nit)" style="text;html=1;strokeColor=none;fillColor=none;fontSize=9;fontFamily=Noto Sans SC;align=left;fontColor=#333;" parent="1" vertex="1">
+          <mxGeometry x="920" y="480" width="120" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="luminance-desc" value="&lt;font style=&quot;font-size: 12px;&quot;&gt;• &lt;b style=&quot;&quot;&gt;发光/反射面&lt;/b&gt;在特定方向&lt;br&gt;单位投影面积的发光强度&lt;br&gt;&lt;br&gt;• 类比：水面在特定角度&lt;br&gt;反射的&lt;b style=&quot;&quot;&gt;光强&lt;/b&gt;&lt;br&gt;&lt;br&gt;• 公式：Lᵥ = dIᵥ/(dA·cosθ)&lt;br&gt;• 人眼实际感知的&quot;明亮程度&quot;&lt;/font&gt;" style="text;html=1;strokeColor=none;fillColor=none;fontSize=8;fontFamily=Noto Sans SC;align=left;" parent="1" vertex="1">
+          <mxGeometry x="880" y="500" width="260" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="eye" value="👁" style="text;html=1;strokeColor=none;fillColor=none;fontSize=40;fontFamily=Noto Sans SC;align=center;" parent="1" vertex="1">
+          <mxGeometry x="720" y="520" width="60" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="luminance-arrow" style="edgeStyle=none;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#F57C00;strokeWidth=2;endArrow=block;endFill=1;" parent="1" source="surface" target="eye" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="650" y="540" as="sourcePoint" />
+            <mxPoint x="720" y="545" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="luminance-arrow-label" value="反射光" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=8;fontFamily=Noto Sans SC;" parent="luminance-arrow" vertex="1" connectable="0">
+          <mxGeometry x="0.5" y="-15" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="luminance-arrow2" style="edgeStyle=none;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#F57C00;strokeWidth=2;endArrow=block;endFill=1;" parent="1" source="eye" target="luminance-box" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="780" y="545" as="sourcePoint" />
+            <mxPoint x="870" y="540" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="relation-box" value="" style="rounded=1;fillColor=#F5F5F5;strokeColor=#424242;strokeWidth=2;" parent="1" vertex="1">
+          <mxGeometry x="350" y="680" width="500" height="180" as="geometry" />
+        </mxCell>
+        <mxCell id="relation-title" value="&lt;b&gt;📊 四概念关系总结&lt;/b&gt;" style="text;html=1;strokeColor=none;fillColor=none;fontSize=9;fontFamily=Noto Sans SC;align=center;fontColor=#424242;" parent="1" vertex="1">
+          <mxGeometry x="360" y="690" width="480" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="relation-content" value="&lt;font style=&quot;font-size: 12px;&quot;&gt;&lt;b style=&quot;&quot;&gt;物理关系链：&lt;/b&gt;&lt;br&gt;&lt;br&gt;光通量(Φᵥ) → 发光强度(Iᵥ = Φᵥ/Ω) → 照度(Eᵥ = Iᵥcosθ/r²) → 亮度(Lᵥ = Eᵥ·ρ/π)&lt;br&gt;&lt;br&gt;&lt;b style=&quot;&quot;&gt;记忆口诀：&lt;/b&gt;&lt;br&gt;• 光通量：光源&lt;font color=&quot;#1976D2&quot;&gt;&lt;b&gt;总共发出&lt;/b&gt;&lt;/font&gt;多少光&lt;br&gt;• 发光强度：光源&lt;font color=&quot;#7B1FA2&quot;&gt;&lt;b&gt;某个方向&lt;/b&gt;&lt;/font&gt;发出多强的光&lt;br&gt;• 照度：&lt;font color=&quot;#388E3C&quot;&gt;&lt;b&gt;被照面&lt;/b&gt;&lt;/font&gt;单位面积接收多少光&lt;br&gt;• 亮度：&lt;font color=&quot;#F57C00&quot;&gt;&lt;b&gt;发光/反射面&lt;/b&gt;&lt;/font&gt;在人眼看来有多亮&lt;/font&gt;" style="text;html=1;strokeColor=none;fillColor=none;fontSize=9;fontFamily=Noto Sans SC;align=left;" parent="1" vertex="1">
+          <mxGeometry x="370" y="690" width="460" height="150" as="geometry" />
+        </mxCell>
+        <mxCell id="analogy-box" value="" style="rounded=1;fillColor=#E1F5FE;strokeColor=#0277BD;strokeWidth=2;" parent="1" vertex="1">
+          <mxGeometry x="50" y="680" width="280" height="180" as="geometry" />
+        </mxCell>
+        <mxCell id="analogy-title" value="&lt;b&gt;💡 生活类比&lt;/b&gt;" style="text;html=1;strokeColor=none;fillColor=none;fontSize=8;fontFamily=Noto Sans SC;align=center;fontColor=#0277BD;" parent="1" vertex="1">
+          <mxGeometry x="60" y="690" width="260" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="analogy-content" value="&lt;font style=&quot;font-size: 12px;&quot;&gt;用水龙头浇水来类比：&lt;br&gt;&lt;br&gt;• &lt;b style=&quot;&quot;&gt;光通量&lt;/b&gt; = 水龙头&lt;font color=&quot;#1976D2&quot;&gt;总出水量&lt;/font&gt;&lt;br&gt;• &lt;b style=&quot;&quot;&gt;发光强度&lt;/b&gt; = &lt;font color=&quot;#7B1FA2&quot;&gt;某方向&lt;/font&gt;水流强度&lt;br&gt;• &lt;b style=&quot;&quot;&gt;照度&lt;/b&gt; = 地面&lt;font color=&quot;#388E3C&quot;&gt;单位面积&lt;/font&gt;接收的水量&lt;br&gt;• &lt;b style=&quot;&quot;&gt;亮度&lt;/b&gt; = 湿润地面&lt;font color=&quot;#F57C00&quot;&gt;反射&lt;/font&gt;的光亮程度&lt;/font&gt;" style="text;html=1;strokeColor=none;fillColor=none;fontSize=8;fontFamily=Noto Sans SC;align=left;" parent="1" vertex="1">
+          <mxGeometry x="60" y="720" width="260" height="130" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

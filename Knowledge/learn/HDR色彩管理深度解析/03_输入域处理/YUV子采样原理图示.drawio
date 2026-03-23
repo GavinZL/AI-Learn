@@ -1,0 +1,372 @@
+<mxfile host="app.diagrams.net">
+  <diagram name="YUV子采样原理" id="yuv-subsampling">
+    <mxGraphModel dx="1434" dy="780" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="0" pageScale="1" pageWidth="1800" pageHeight="1400" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        
+        <!-- 标题 -->
+        <mxCell id="title" value="YUV 子采样原理图示" style="text;html=1;fontSize=24;fontStyle=1;align=center" vertex="1" parent="1">
+          <mxGeometry x="700" y="20" width="400" height="40" as="geometry" />
+        </mxCell>
+        
+        <!-- ========== 4:4:4 无子采样 ========== -->
+        <mxCell id="bg-444" value="" style="rounded=1;strokeWidth=2;fillColor=#e8f5e9;strokeColor=#4caf50;arcSize=5" vertex="1" parent="1">
+          <mxGeometry x="50" y="80" width="320" height="220" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="label-444" value="4:4:4（无子采样）&#xa;数据量: 100%" style="text;html=1;fontSize=14;fontStyle=1;align=center" vertex="1" parent="1">
+          <mxGeometry x="60" y="90" width="300" height="40" as="geometry" />
+        </mxCell>
+        
+        <!-- 4:4:4 Y通道 -->
+        <mxCell id="444-y-label" value="Y:" style="text;html=1;fontSize=12;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="70" y="140" width="30" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="444-y0" value="Y0" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff9c4;strokeColor=#f9a825;fontSize=11" vertex="1" parent="1">
+          <mxGeometry x="100" y="140" width="40" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="444-y1" value="Y1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff9c4;strokeColor=#f9a825;fontSize=11" vertex="1" parent="1">
+          <mxGeometry x="150" y="140" width="40" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="444-y2" value="Y2" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff9c4;strokeColor=#f9a825;fontSize=11" vertex="1" parent="1">
+          <mxGeometry x="200" y="140" width="40" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="444-y3" value="Y3" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff9c4;strokeColor=#f9a825;fontSize=11" vertex="1" parent="1">
+          <mxGeometry x="250" y="140" width="40" height="30" as="geometry" />
+        </mxCell>
+        
+        <!-- 4:4:4 U通道 -->
+        <mxCell id="444-u-label" value="U:" style="text;html=1;fontSize=12;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="70" y="180" width="30" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="444-u0" value="U0" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#bbdefb;strokeColor=#1976d2;fontSize=11" vertex="1" parent="1">
+          <mxGeometry x="100" y="180" width="40" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="444-u1" value="U1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#bbdefb;strokeColor=#1976d2;fontSize=11" vertex="1" parent="1">
+          <mxGeometry x="150" y="180" width="40" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="444-u2" value="U2" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#bbdefb;strokeColor=#1976d2;fontSize=11" vertex="1" parent="1">
+          <mxGeometry x="200" y="180" width="40" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="444-u3" value="U3" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#bbdefb;strokeColor=#1976d2;fontSize=11" vertex="1" parent="1">
+          <mxGeometry x="250" y="180" width="40" height="30" as="geometry" />
+        </mxCell>
+        
+        <!-- 4:4:4 V通道 -->
+        <mxCell id="444-v-label" value="V:" style="text;html=1;fontSize=12;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="70" y="220" width="30" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="444-v0" value="V0" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffcdd2;strokeColor=#d32f2f;fontSize=11" vertex="1" parent="1">
+          <mxGeometry x="100" y="220" width="40" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="444-v1" value="V1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffcdd2;strokeColor=#d32f2f;fontSize=11" vertex="1" parent="1">
+          <mxGeometry x="150" y="220" width="40" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="444-v2" value="V2" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffcdd2;strokeColor=#d32f2f;fontSize=11" vertex="1" parent="1">
+          <mxGeometry x="200" y="220" width="40" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="444-v3" value="V3" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffcdd2;strokeColor=#d32f2f;fontSize=11" vertex="1" parent="1">
+          <mxGeometry x="250" y="220" width="40" height="30" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="444-app" value="应用: 电影调色、医学影像" style="text;html=1;fontSize=10;align=center" vertex="1" parent="1">
+          <mxGeometry x="70" y="260" width="240" height="25" as="geometry" />
+        </mxCell>
+        
+        <!-- ========== 4:2:2 水平1/2采样 ========== -->
+        <mxCell id="bg-422" value="" style="rounded=1;strokeWidth=2;fillColor=#e3f2fd;strokeColor=#2196f3;arcSize=5" vertex="1" parent="1">
+          <mxGeometry x="400" y="80" width="320" height="220" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="label-422" value="4:2:2（水平1/2采样）&#xa;数据量: 67%" style="text;html=1;fontSize=14;fontStyle=1;align=center" vertex="1" parent="1">
+          <mxGeometry x="410" y="90" width="300" height="40" as="geometry" />
+        </mxCell>
+        
+        <!-- 4:2:2 Y通道 -->
+        <mxCell id="422-y-label" value="Y:" style="text;html=1;fontSize=12;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="420" y="140" width="30" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="422-y0" value="Y0" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff9c4;strokeColor=#f9a825;fontSize=11" vertex="1" parent="1">
+          <mxGeometry x="450" y="140" width="40" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="422-y1" value="Y1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff9c4;strokeColor=#f9a825;fontSize=11" vertex="1" parent="1">
+          <mxGeometry x="500" y="140" width="40" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="422-y2" value="Y2" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff9c4;strokeColor=#f9a825;fontSize=11" vertex="1" parent="1">
+          <mxGeometry x="550" y="140" width="40" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="422-y3" value="Y3" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff9c4;strokeColor=#f9a825;fontSize=11" vertex="1" parent="1">
+          <mxGeometry x="600" y="140" width="40" height="30" as="geometry" />
+        </mxCell>
+        
+        <!-- 4:2:2 U通道 - 共享示意 -->
+        <mxCell id="422-u-label" value="U:" style="text;html=1;fontSize=12;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="420" y="180" width="30" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="422-u0" value="U0" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#bbdefb;strokeColor=#1976d2;fontSize=11" vertex="1" parent="1">
+          <mxGeometry x="450" y="180" width="65" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="422-u2" value="U2" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#bbdefb;strokeColor=#1976d2;fontSize=11" vertex="1" parent="1">
+          <mxGeometry x="550" y="180" width="65" height="30" as="geometry" />
+        </mxCell>
+        
+        <!-- 共享箭头 -->
+        <mxCell id="422-u-arrow1" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#1976d2;strokeWidth=1;dashed=1" edge="1" parent="1" source="422-u0" target="422-y1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="520" y="195" as="sourcePoint"/>
+            <mxPoint x="520" y="170" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="422-u-arrow2" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#1976d2;strokeWidth=1;dashed=1" edge="1" parent="1" source="422-u2" target="422-y3">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="620" y="195" as="sourcePoint"/>
+            <mxPoint x="620" y="170" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+        
+        <!-- 4:2:2 V通道 -->
+        <mxCell id="422-v-label" value="V:" style="text;html=1;fontSize=12;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="420" y="220" width="30" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="422-v0" value="V0" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffcdd2;strokeColor=#d32f2f;fontSize=11" vertex="1" parent="1">
+          <mxGeometry x="450" y="220" width="65" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="422-v2" value="V2" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffcdd2;strokeColor=#d32f2f;fontSize=11" vertex="1" parent="1">
+          <mxGeometry x="550" y="220" width="65" height="30" as="geometry" />
+        </mxCell>
+        
+        <!-- 共享箭头 V -->
+        <mxCell id="422-v-arrow1" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#d32f2f;strokeWidth=1;dashed=1" edge="1" parent="1" source="422-v0" target="422-y1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="520" y="235" as="sourcePoint"/>
+            <mxPoint x="520" y="170" as="targetPoint"/>
+            <Array as="points">
+              <mxPoint x="520" y="250"/>
+              <mxPoint x="520" y="250"/>
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        
+        <mxCell id="422-app" value="应用: 广播级视频、ProRes" style="text;html=1;fontSize=10;align=center" vertex="1" parent="1">
+          <mxGeometry x="420" y="260" width="240" height="25" as="geometry" />
+        </mxCell>
+        
+        <!-- ========== 4:2:0 水平和垂直1/2采样 ========== -->
+        <mxCell id="bg-420" value="" style="rounded=1;strokeWidth=2;fillColor=#fff3e0;strokeColor=#ff9800;arcSize=5" vertex="1" parent="1">
+          <mxGeometry x="750" y="80" width="400" height="280" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="label-420" value="4:2:0（水平&amp;垂直1/2采样）&#xa;数据量: 50% - 最常用" style="text;html=1;fontSize=14;fontStyle=1;align=center" vertex="1" parent="1">
+          <mxGeometry x="760" y="90" width="380" height="40" as="geometry" />
+        </mxCell>
+        
+        <!-- 4:2:0 行0 -->
+        <mxCell id="420-row0-label" value="行0:" style="text;html=1;fontSize=11;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="770" y="140" width="40" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="420-y0" value="Y0" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff9c4;strokeColor=#f9a825;fontSize=11" vertex="1" parent="1">
+          <mxGeometry x="810" y="140" width="40" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="420-y1" value="Y1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff9c4;strokeColor=#f9a825;fontSize=11" vertex="1" parent="1">
+          <mxGeometry x="860" y="140" width="40" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="420-y2" value="Y2" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff9c4;strokeColor=#f9a825;fontSize=11" vertex="1" parent="1">
+          <mxGeometry x="910" y="140" width="40" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="420-y3" value="Y3" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff9c4;strokeColor=#f9a825;fontSize=11" vertex="1" parent="1">
+          <mxGeometry x="960" y="140" width="40" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="420-u0" value="U0" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#bbdefb;strokeColor=#1976d2;fontSize=11" vertex="1" parent="1">
+          <mxGeometry x="1020" y="140" width="50" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="420-v0" value="V0" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffcdd2;strokeColor=#d32f2f;fontSize=11" vertex="1" parent="1">
+          <mxGeometry x="1080" y="140" width="50" height="30" as="geometry" />
+        </mxCell>
+        
+        <!-- 4:2:0 行1 -->
+        <mxCell id="420-row1-label" value="行1:" style="text;html=1;fontSize=11;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="770" y="180" width="40" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="420-y4" value="Y4" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff9c4;strokeColor=#f9a825;fontSize=11" vertex="1" parent="1">
+          <mxGeometry x="810" y="180" width="40" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="420-y5" value="Y5" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff9c4;strokeColor=#f9a825;fontSize=11" vertex="1" parent="1">
+          <mxGeometry x="860" y="180" width="40" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="420-y6" value="Y6" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff9c4;strokeColor=#f9a825;fontSize=11" vertex="1" parent="1">
+          <mxGeometry x="910" y="180" width="40" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="420-y7" value="Y7" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff9c4;strokeColor=#f9a825;fontSize=11" vertex="1" parent="1">
+          <mxGeometry x="960" y="180" width="40" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="420-share-label" value="(共享行0的U/V)" style="text;html=1;fontSize=10;fontStyle=2;align=center" vertex="1" parent="1">
+          <mxGeometry x="1010" y="180" width="130" height="30" as="geometry" />
+        </mxCell>
+        
+        <!-- 共享示意框 -->
+        <mxCell id="420-share-box" value="" style="rounded=1;strokeWidth=2;fillColor=none;strokeColor=#666666;dashed=1" vertex="1" parent="1">
+          <mxGeometry x="805" y="135" width="205" height="85" as="geometry" />
+        </mxCell>
+        <mxCell id="420-share-text" value="2×2像素块共享一组UV" style="text;html=1;fontSize=11;fontStyle=1;align=center" vertex="1" parent="1">
+          <mxGeometry x="810" y="230" width="200" height="25" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="420-app" value="应用: H.264/HEVC/AV1、JPEG、流媒体" style="text;html=1;fontSize=10;align=center" vertex="1" parent="1">
+          <mxGeometry x="770" y="270" width="300" height="25" as="geometry" />
+        </mxCell>
+        
+        <!-- ========== 4:1:1 水平1/4采样 ========== -->
+        <mxCell id="bg-411" value="" style="rounded=1;strokeWidth=2;fillColor=#f3e5f5;strokeColor=#9c27b0;arcSize=5" vertex="1" parent="1">
+          <mxGeometry x="50" y="330" width="320" height="180" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="label-411" value="4:1:1（水平1/4采样）&#xa;数据量: 50%" style="text;html=1;fontSize=14;fontStyle=1;align=center" vertex="1" parent="1">
+          <mxGeometry x="60" y="340" width="300" height="40" as="geometry" />
+        </mxCell>
+        
+        <!-- 4:1:1 Y通道 -->
+        <mxCell id="411-y-label" value="Y:" style="text;html=1;fontSize=12;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="70" y="390" width="30" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="411-y0" value="Y0" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff9c4;strokeColor=#f9a825;fontSize=11" vertex="1" parent="1">
+          <mxGeometry x="100" y="390" width="40" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="411-y1" value="Y1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff9c4;strokeColor=#f9a825;fontSize=11" vertex="1" parent="1">
+          <mxGeometry x="150" y="390" width="40" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="411-y2" value="Y2" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff9c4;strokeColor=#f9a825;fontSize=11" vertex="1" parent="1">
+          <mxGeometry x="200" y="390" width="40" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="411-y3" value="Y3" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff9c4;strokeColor=#f9a825;fontSize=11" vertex="1" parent="1">
+          <mxGeometry x="250" y="390" width="40" height="30" as="geometry" />
+        </mxCell>
+        
+        <!-- 4:1:1 UV通道 -->
+        <mxCell id="411-u-label" value="U:" style="text;html=1;fontSize=12;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="70" y="430" width="30" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="411-u0" value="U0" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#bbdefb;strokeColor=#1976d2;fontSize=11" vertex="1" parent="1">
+          <mxGeometry x="100" y="430" width="40" height="30" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="411-v-label" value="V:" style="text;html=1;fontSize=12;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="160" y="430" width="30" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="411-v0" value="V0" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffcdd2;strokeColor=#d32f2f;fontSize=11" vertex="1" parent="1">
+          <mxGeometry x="190" y="430" width="40" height="30" as="geometry" />
+        </mxCell>
+        
+        <!-- 共享箭头 -->
+        <mxCell id="411-share-box" value="" style="rounded=1;strokeWidth=2;fillColor=none;strokeColor=#666666;dashed=1" vertex="1" parent="1">
+          <mxGeometry x="95" y="385" width="205" height="40" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="411-app" value="应用: 早期DV格式（已较少使用）" style="text;html=1;fontSize=10;align=center" vertex="1" parent="1">
+          <mxGeometry x="70" y="470" width="240" height="25" as="geometry" />
+        </mxCell>
+        
+        <!-- ========== 4:0:0 仅亮度 ========== -->
+        <mxCell id="bg-400" value="" style="rounded=1;strokeWidth=2;fillColor=#eceff1;strokeColor=#607d8b;arcSize=5" vertex="1" parent="1">
+          <mxGeometry x="400" y="330" width="320" height="180" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="label-400" value="4:0:0（仅亮度/灰度）&#xa;数据量: 33%" style="text;html=1;fontSize=14;fontStyle=1;align=center" vertex="1" parent="1">
+          <mxGeometry x="410" y="340" width="300" height="40" as="geometry" />
+        </mxCell>
+        
+        <!-- 4:0:0 Y通道 -->
+        <mxCell id="400-y-label" value="Y:" style="text;html=1;fontSize=12;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="420" y="400" width="30" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="400-y0" value="Y0" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff9c4;strokeColor=#f9a825;fontSize=11" vertex="1" parent="1">
+          <mxGeometry x="450" y="400" width="40" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="400-y1" value="Y1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff9c4;strokeColor=#f9a825;fontSize=11" vertex="1" parent="1">
+          <mxGeometry x="500" y="400" width="40" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="400-y2" value="Y2" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff9c4;strokeColor=#f9a825;fontSize=11" vertex="1" parent="1">
+          <mxGeometry x="550" y="400" width="40" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="400-y3" value="Y3" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff9c4;strokeColor=#f9a825;fontSize=11" vertex="1" parent="1">
+          <mxGeometry x="600" y="400" width="40" height="30" as="geometry" />
+        </mxCell>
+        
+        <!-- 4:0:0 无UV -->
+        <mxCell id="400-uv-label" value="U/V: （无色彩信息）" style="text;html=1;fontSize=11;fontStyle=2" vertex="1" parent="1">
+          <mxGeometry x="450" y="440" width="150" height="25" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="400-app" value="应用: 灰度图像、预览缩略图" style="text;html=1;fontSize=10;align=center" vertex="1" parent="1">
+          <mxGeometry x="420" y="470" width="240" height="25" as="geometry" />
+        </mxCell>
+        
+        <!-- ========== 采样格式命名规则说明 ========== -->
+        <mxCell id="bg-rule" value="" style="rounded=1;strokeWidth=2;fillColor=#e8eaf6;strokeColor=#3f51b5;arcSize=5" vertex="1" parent="1">
+          <mxGeometry x="750" y="400" width="400" height="200" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="label-rule" value="采样格式命名规则: J:a:b" style="text;html=1;fontSize=14;fontStyle=1;align=center" vertex="1" parent="1">
+          <mxGeometry x="760" y="410" width="380" height="30" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="rule-j" value="J: 水平采样参考（通常是4）&#xa;表示每4个像素的基准宽度" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#c8e6c9;strokeColor=#4caf50;fontSize=11" vertex="1" parent="1">
+          <mxGeometry x="770" y="450" width="170" height="50" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="rule-a" value="a: 第一行色度采样数&#xa;表示第一行采集的色度样本数" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#bbdefb;strokeColor=#2196f3;fontSize=11" vertex="1" parent="1">
+          <mxGeometry x="770" y="510" width="170" height="50" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="rule-b" value="b: 第二行色度采样数&#xa;表示第二行采集的色度样本数" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffccbc;strokeColor=#ff5722;fontSize=11" vertex="1" parent="1">
+          <mxGeometry x="960" y="450" width="170" height="50" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="rule-note" value="原理: 利用人眼对色度细节不敏感的特性&#xa;降低色度通道分辨率以节省带宽" style="text;html=1;fontSize=11;fontStyle=1;align=center" vertex="1" parent="1">
+          <mxGeometry x="770" y="570" width="360" height="40" as="geometry" />
+        </mxCell>
+        
+        <!-- ========== 图例 ========== -->
+        <mxCell id="legend-bg" value="" style="rounded=1;strokeWidth=1;fillColor=#fafafa;strokeColor=#bdbdbd;arcSize=3" vertex="1" parent="1">
+          <mxGeometry x="1180" y="80" width="150" height="200" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="legend-title" value="图例" style="text;html=1;fontSize=12;fontStyle=1;align=center" vertex="1" parent="1">
+          <mxGeometry x="1190" y="90" width="130" height="25" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="legend-y" value="Y" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff9c4;strokeColor=#f9a825;fontSize=11" vertex="1" parent="1">
+          <mxGeometry x="1200" y="125" width="35" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="legend-y-text" value="亮度通道" style="text;html=1;fontSize=10" vertex="1" parent="1">
+          <mxGeometry x="1245" y="125" width="70" height="25" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="legend-u" value="U" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#bbdefb;strokeColor=#1976d2;fontSize=11" vertex="1" parent="1">
+          <mxGeometry x="1200" y="160" width="35" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="legend-u-text" value="色度U通道" style="text;html=1;fontSize=10" vertex="1" parent="1">
+          <mxGeometry x="1245" y="160" width="70" height="25" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="legend-v" value="V" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffcdd2;strokeColor=#d32f2f;fontSize=11" vertex="1" parent="1">
+          <mxGeometry x="1200" y="195" width="35" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="legend-v-text" value="色度V通道" style="text;html=1;fontSize=10" vertex="1" parent="1">
+          <mxGeometry x="1245" y="195" width="70" height="25" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="legend-share" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#666666;strokeWidth=1;dashed=1" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1218" y="250" as="sourcePoint"/>
+            <mxPoint x="1218" y="250" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="legend-share-text" value="共享关系" style="text;html=1;fontSize=10" vertex="1" parent="1">
+          <mxGeometry x="1230" y="240" width="80" height="20" as="geometry" />
+        </mxCell>
+        
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
