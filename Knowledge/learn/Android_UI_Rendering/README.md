@@ -41,6 +41,7 @@
 |------|------|
 | *Surface与SurfaceFlinger_详细解析.md* | Surface体系、BufferQueue、SurfaceFlinger合成（待编写） |
 | *HWComposer与Display_详细解析.md* | 硬件合成器与显示输出（待编写） |
+| [EGL与OpenGL_ES渲染管线_详细解析.md](./04_Surface与缓冲区/EGL与OpenGL_ES渲染管线_详细解析.md) | EGL核心概念、架构层次、关键组件详解、完整工作流程与实践应用 |
 
 #### 性能优化
 
@@ -92,6 +93,8 @@ Android_UI_Rendering_深度解析.md
     │
     ├─→ Surface与SurfaceFlinger_详细解析.md
     │
+    ├─→ EGL与OpenGL_ES渲染管线_详细解析.md
+    │
     └─→ HWComposer与Display_详细解析.md
 ```
 
@@ -126,6 +129,9 @@ Android_UI_Rendering_深度解析.md（性能部分）
 | DisplayList | 绘制命令的记录，支持硬件加速回放 | 硬件加速与DisplayList |
 | RenderNode | 渲染节点，持有DisplayList和变换属性 | 硬件加速与DisplayList |
 | RenderThread | 独立于主线程的GPU渲染线程 | 硬件加速与DisplayList |
+| EGL | 渲染API（OpenGL ES）与本地窗口系统之间的桥梁接口 | EGL与OpenGL_ES渲染管线 |
+| EGLSurface | EGL渲染目标，底层包装ANativeWindow/Surface | EGL与OpenGL_ES渲染管线 |
+| EGLContext | OpenGL ES状态容器，管理纹理、着色器等渲染资源 | EGL与OpenGL_ES渲染管线 |
 | invalidate | 请求重绘，只触发Draw阶段 | View绘制三阶段 |
 | requestLayout | 请求重新布局，触发Measure+Layout+Draw | View绘制三阶段 |
 

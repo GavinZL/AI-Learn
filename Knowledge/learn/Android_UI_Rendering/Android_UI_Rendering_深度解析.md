@@ -40,6 +40,7 @@
 
 - *Surface与SurfaceFlinger_详细解析*（待编写）- Surface体系与合成流程
 - *HWComposer与Display_详细解析*（待编写）- 硬件合成与显示输出
+- [EGL与OpenGL_ES渲染管线_详细解析](./04_Surface与缓冲区/EGL与OpenGL_ES渲染管线_详细解析.md) - EGL核心概念、架构层次、关键组件、工作流程与实践应用
 
 ### 性能优化
 
