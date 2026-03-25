@@ -1686,6 +1686,934 @@ graph TB
 
 ---
 
+## 13. 多线程 CommandBuffer 提交
+
+**结论先行**：Metal 的 `MTLCommandQueue` 是线程安全的，可多线程并发创建 `MTLCommandBuffer`；但每个 `CommandBuffer` 本身不是线程安全的，编码操作必须串行。最佳实践是「多线程并行准备数据 + 单线程顺序提交」或「每个线程独立 CommandBuffer 并行提交」。
+
+### 13.1 多线程提交核心原则
+
+```mermaid
+graph TB
+    subgraph 线程安全规则
+        Q[MTLCommandQueue<br/>✅ 线程安全] --> CB1[CommandBuffer A]
+        Q --> CB2[CommandBuffer B]
+        Q --> CB3[CommandBuffer C]
+        
+        CB1 --> |❌ 非线程安全| E1[Encoder A1]
+        CB1 --> |❌ 非线程安全| E2[Encoder A2]
+        
+        CB2 --> |❌ 非线程安全| E3[Encoder B1]
+    end
+    
+    subgraph 两种模式
+        M1[模式1: 并行准备 + 串行提交] --> M1_D[多个线程准备数据<br/>主线程统一提交]
+        M2[模式2: 独立队列并行提交] --> M2_D[每个线程独立 Queue<br/>并行编码和提交]
+    end
+```
+
+| 组件 | 线程安全 | 说明 |
+|------|---------|------|
+| **MTLCommandQueue** | ✅ | 可多线程同时 `makeCommandBuffer()` |
+| **MTLCommandBuffer** | ❌ | 编码器创建和命令编码需串行 |
+| **MTLRenderPipelineState** | ✅ | 只读状态对象，可多线程绑定 |
+| **MTLBuffer/MTLTexture** | ⚠️ | 内容读写需同步，对象本身线程安全 |
+
+### 13.2 Camera + 前处理 多线程架构
+
+**场景描述**：
+- **Camera 线程**：从 AVCaptureSession 获取帧，进行基础格式转换
+- **前处理线程**：执行 Metal Compute Shader（色彩空间转换、缩放、归一化）
+- **主线程**：渲染到屏幕
+
+```mermaid
+sequenceDiagram
+    participant CT as Camera Thread<br/>AVCaptureSession
+    participant PT as Preprocess Thread<br/>Metal Compute
+    participant MT as Main Thread<br/>Render
+    participant GPU as GPU
+    
+    Note over CT,GPU: Triple Buffering 机制
+    
+    CT->>CT: Frame N 采集
+    CT->>CT: CVPixelBuffer → MTLTexture
+    CT->>PT: 信号: Frame N 就绪
+    
+    PT->>PT: 等待信号量 (maxFramesInFlight)
+    PT->>PT: 获取可用 Buffer Index
+    PT->>GPU: 创建 CommandBuffer
+    PT->>GPU: Encode Compute Shader<br/>色彩转换/缩放/归一化
+    PT->>GPU: Commit CommandBuffer
+    PT->>MT: 信号: 前处理完成
+    
+    GPU->>GPU: 执行 Compute
+    GPU-->>PT: addCompletedHandler<br/>释放信号量
+    
+    MT->>MT: 等待前处理完成
+    MT->>GPU: 创建 Render CommandBuffer
+    MT->>GPU: Encode Render Pass
+    MT->>GPU: Present Drawable
+    MT->>GPU: Commit
+    
+    CT->>CT: Frame N+1 采集
+    CT->>PT: 信号: Frame N+1 就绪
+    PT->>PT: 使用下一个 Buffer Index
+    Note over PT: 与 GPU 执行 Frame N 并行
+```
+
+### 13.3 完整代码实现
+
+```swift
+import Metal
+import MetalKit
+import AVFoundation
+
+// MARK: - 多线程 Metal 相机处理器
+
+class MultithreadedCameraProcessor: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate {
+    
+    // MARK: Metal 资源
+    private let device: MTLDevice
+    private let commandQueue: MTLCommandQueue          // 主队列用于渲染
+    private let computeQueue: MTLCommandQueue          // 独立队列用于前处理
+    
+    // MARK: 管线状态
+    private var computePipeline: MTLComputePipelineState!   // 前处理 Compute
+    private var renderPipeline: MTLRenderPipelineState!     // 渲染管线
+    
+    // MARK: 多线程同步
+    private let frameSemaphore: DispatchSemaphore
+    private static let maxFramesInFlight = 3
+    
+    // MARK: 缓冲区管理 (Triple Buffering)
+    private var intermediateTextures: [MTLTexture] = []  // Compute 输出 / Render 输入
+    private var availableBufferIndices: [Int] = [0, 1, 2]
+    private var bufferIndexLock = NSLock()
+    
+    // MARK: 线程
+    private let cameraQueue = DispatchQueue(label: "com.example.camera", qos: .userInitiated)
+    private let preprocessQueue = DispatchQueue(label: "com.example.preprocess", qos: .userInitiated)
+    private var textureCache: CVMetalTextureCache?
+    
+    // MARK: 状态
+    private var currentFrameIndex = 0
+    @Published var fps: Double = 0
+    private var lastFrameTime: CFTimeInterval = 0
+    
+    init?(metalView: MTKView) {
+        guard let device = MTLCreateSystemDefaultDevice(),
+              let commandQueue = device.makeCommandQueue(),
+              let computeQueue = device.makeCommandQueue() else {
+            return nil
+        }
+        
+        self.device = device
+        self.commandQueue = commandQueue
+        self.computeQueue = computeQueue
+        self.frameSemaphore = DispatchSemaphore(value: Self.maxFramesInFlight)
+        
+        super.init()
+        
+        // 初始化纹理缓存
+        CVMetalTextureCacheCreate(nil, nil, device, nil, &textureCache)
+        
+        // 设置 MetalView
+        metalView.device = device
+        metalView.delegate = self
+        metalView.colorPixelFormat = .bgra8Unorm
+        
+        // 创建资源
+        createPipelines()
+        createIntermediateTextures(width: 1920, height: 1080)
+        setupCamera()
+    }
+    
+    // MARK: - 资源创建
+    
+    private func createPipelines() {
+        let library = device.makeDefaultLibrary()!
+        
+        // Compute Pipeline: 色彩转换 + 缩放
+        let computeFunc = library.makeFunction(name: "preprocessCameraFrame")!
+        computePipeline = try! device.makeComputePipelineState(function: computeFunc)
+        
+        // Render Pipeline: 显示结果
+        let vertexFunc = library.makeFunction(name: "vertexShader")!
+        let fragmentFunc = library.makeFunction(name: "fragmentShader")!
+        
+        let renderDesc = MTLRenderPipelineDescriptor()
+        renderDesc.vertexFunction = vertexFunc
+        renderDesc.fragmentFunction = fragmentFunc
+        renderDesc.colorAttachments[0].pixelFormat = .bgra8Unorm
+        renderPipeline = try! device.makeRenderPipelineState(descriptor: renderDesc)
+    }
+    
+    private func createIntermediateTextures(width: Int, height: Int) {
+        let desc = MTLTextureDescriptor.texture2DDescriptor(
+            pixelFormat: .rgba8Unorm,
+            width: width,
+            height: height,
+            mipmapped: false
+        )
+        desc.usage = [.shaderRead, .shaderWrite, .renderTarget]
+        desc.storageMode = .private  // GPU 独占，优化性能
+        
+        for _ in 0..<Self.maxFramesInFlight {
+            intermediateTextures.append(device.makeTexture(descriptor: desc)!)
+        }
+    }
+    
+    // MARK: - Camera 设置
+    
+    private func setupCamera() {
+        let captureSession = AVCaptureSession()
+        captureSession.sessionPreset = .hd1920x1080
+        
+        guard let device = AVCaptureDevice.default(.builtInWideAngleCamera, for: .video, position: .back),
+              let input = try? AVCaptureDeviceInput(device: device) else {
+            return
+        }
+        
+        captureSession.addInput(input)
+        
+        let output = AVCaptureVideoDataOutput()
+        output.setSampleBufferDelegate(self, queue: cameraQueue)
+        output.videoSettings = [
+            kCVPixelBufferPixelFormatTypeKey as String: kCVPixelFormatType_32BGRA
+        ]
+        captureSession.addOutput(output)
+        
+        DispatchQueue.global(qos: .background).async {
+            captureSession.startRunning()
+        }
+    }
+    
+    // MARK: - AVCaptureVideoDataOutputSampleBufferDelegate
+    
+    func captureOutput(_ output: AVCaptureOutput, 
+                       didOutput sampleBuffer: CMSampleBuffer, 
+                       from connection: AVCaptureConnection) {
+        
+        guard let pixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer) else { return }
+        
+        // 计算 FPS
+        let currentTime = CACurrentMediaTime()
+        let delta = currentTime - lastFrameTime
+        lastFrameTime = currentTime
+        fps = 1.0 / delta
+        
+        // 获取当前帧的 Buffer Index
+        frameSemaphore.wait()  // 等待可用槽位
+        
+        let bufferIndex = getNextBufferIndex()
+        
+        // 将工作提交到前处理线程
+        preprocessQueue.async { [weak self] in
+            self?.preprocessFrame(pixelBuffer: pixelBuffer, bufferIndex: bufferIndex)
+        }
+    }
+    
+    // MARK: - 前处理线程 (Metal Compute)
+    
+    private func preprocessFrame(pixelBuffer: CVPixelBuffer, bufferIndex: Int) {
+        // 1. 创建 CommandBuffer (在 computeQueue 上)
+        guard let commandBuffer = computeQueue.makeCommandBuffer() else {
+            releaseBufferIndex(bufferIndex)
+            return
+        }
+        
+        // 2. 从 CVPixelBuffer 创建 MTLTexture (零拷贝)
+        let cameraTexture = createTextureFromPixelBuffer(pixelBuffer)
+        let outputTexture = intermediateTextures[bufferIndex]
+        
+        // 3. 创建 Compute Encoder
+        guard let encoder = commandBuffer.makeComputeCommandEncoder() else {
+            releaseBufferIndex(bufferIndex)
+            return
+        }
+        
+        encoder.setComputePipelineState(computePipeline)
+        encoder.setTexture(cameraTexture, index: 0)
+        encoder.setTexture(outputTexture, index: 1)
+        
+        // 设置参数 (例如：归一化参数)
+        var params = PreprocessParams(
+            mean: simd_float3(0.485, 0.456, 0.406),
+            std: simd_float3(0.229, 0.224, 0.225)
+        )
+        encoder.setBytes(&params, length: MemoryLayout<PreprocessParams>.size, index: 0)
+        
+        // 计算线程组
+        let threadGroupSize = MTLSize(width: 16, height: 16, depth: 1)
+        let threadGroups = MTLSize(
+            width: (outputTexture.width + 15) / 16,
+            height: (outputTexture.height + 15) / 16,
+            depth: 1
+        )
+        
+        encoder.dispatchThreadgroups(threadGroups, threadsPerThreadgroup: threadGroupSize)
+        encoder.endEncoding()
+        
+        // 4. 添加完成回调，释放信号量
+        commandBuffer.addCompletedHandler { [weak self] _ in
+            // GPU 完成 Compute，可以开始渲染
+            // 注意：这里不释放信号量，等渲染完成后再释放
+        }
+        
+        // 5. 提交 Compute 命令
+        commandBuffer.commit()
+        
+        // 6. 通知主线程渲染 (携带 bufferIndex)
+        DispatchQueue.main.async { [weak self] in
+            self?.renderFrame(bufferIndex: bufferIndex)
+        }
+    }
+    
+    // MARK: - 主线程渲染
+    
+    private func renderFrame(bufferIndex: Int) {
+        // 注意：这里应该在 MTKViewDelegate 的 draw(in:) 中调用
+        // 简化示例直接渲染
+        currentFrameIndex = bufferIndex
+        // 触发 MTKView 重绘
+    }
+    
+    // MARK: - 缓冲区索引管理
+    
+    private func getNextBufferIndex() -> Int {
+        bufferIndexLock.lock()
+        defer { bufferIndexLock.unlock() }
+        
+        // 简单轮转
+        let index = availableBufferIndices.removeFirst()
+        availableBufferIndices.append(index)
+        return index
+    }
+    
+    private func releaseBufferIndex(_ index: Int) {
+        frameSemaphore.signal()
+    }
+    
+    private func createTextureFromPixelBuffer(_ pixelBuffer: CVPixelBuffer) -> MTLTexture? {
+        var cvTexture: CVMetalTexture?
+        let width = CVPixelBufferGetWidth(pixelBuffer)
+        let height = CVPixelBufferGetHeight(pixelBuffer)
+        
+        CVMetalTextureCacheCreateTextureFromImage(
+            nil,
+            textureCache!,
+            pixelBuffer,
+            nil,
+            .bgra8Unorm,
+            width,
+            height,
+            0,
+            &cvTexture
+        )
+        
+        return cvTexture.flatMap { CVMetalTextureGetTexture($0) }
+    }
+}
+
+// MARK: - MTKViewDelegate
+
+extension MultithreadedCameraProcessor: MTKViewDelegate {
+    
+    func draw(in view: MTKView) {
+        guard let drawable = view.currentDrawable,
+              let renderPassDescriptor = view.currentRenderPassDescriptor else {
+            return
+        }
+        
+        // 使用当前帧对应的纹理
+        let inputTexture = intermediateTextures[currentFrameIndex]
+        
+        // 在主线程创建 Render CommandBuffer
+        guard let commandBuffer = commandQueue.makeCommandBuffer() else { return }
+        
+        // 创建 Render Encoder
+        guard let encoder = commandBuffer.makeRenderCommandEncoder(descriptor: renderPassDescriptor) else {
+            return
+        }
+        
+        encoder.setRenderPipelineState(renderPipeline)
+        encoder.setFragmentTexture(inputTexture, index: 0)
+        // ... 设置顶点缓冲区等
+        encoder.drawPrimitives(type: .triangle, vertexStart: 0, vertexCount: 6)
+        encoder.endEncoding()
+        
+        // 显示并提交
+        commandBuffer.present(drawable)
+        
+        // 渲染完成后释放信号量
+        commandBuffer.addCompletedHandler { [weak self] _ in
+            self?.releaseBufferIndex(self?.currentFrameIndex ?? 0)
+        }
+        
+        commandBuffer.commit()
+    }
+    
+    func mtkView(_ view: MTKView, drawableSizeWillChange size: CGSize) {}
+}
+
+// MARK: - 数据结构
+
+struct PreprocessParams {
+    let mean: simd_float3
+    let std: simd_float3
+}
+```
+
+### 13.4 Metal Shaders
+
+```metal
+// CameraProcessing.metal
+#include <metal_stdlib>
+using namespace metal;
+
+// 前处理 Kernel：色彩空间转换 + 归一化
+kernel void preprocessCameraFrame(
+    texture2d<float, access::read> cameraTexture [[texture(0)]],
+    texture2d<float, access::write> outputTexture [[texture(1)]],
+    constant PreprocessParams& params [[buffer(0)]],
+    uint2 gid [[thread_position_in_grid]])
+{
+    if (gid.x >= outputTexture.get_width() || gid.y >= outputTexture.get_height()) {
+        return;
+    }
+    
+    // 读取相机帧 (BGRA)
+    float4 color = cameraTexture.read(gid);
+    
+    // BGR → RGB 并归一化到 [0,1]
+    float3 rgb = float3(color.b, color.g, color.r);
+    
+    // ImageNet 标准化
+    rgb = (rgb - params.mean) / params.std;
+    
+    outputTexture.write(float4(rgb, 1.0), gid);
+}
+
+// 渲染 Shader
+vertex VertexOut vertexShader(
+    uint vertexID [[vertex_id]])
+{
+    // 全屏四边形顶点
+    float2 positions[4] = {
+        float2(-1, -1), float2(1, -1),
+        float2(-1,  1), float2(1,  1)
+    };
+    float2 texCoords[4] = {
+        float2(0, 1), float2(1, 1),
+        float2(0, 0), float2(1, 0)
+    };
+    
+    VertexOut out;
+    out.position = float4(positions[vertexID], 0, 1);
+    out.texCoord = texCoords[vertexID];
+    return out;
+}
+
+fragment float4 fragmentShader(
+    VertexOut in [[stage_in]],
+    texture2d<float> inputTexture [[texture(0)]])
+{
+    constexpr sampler texSampler;
+    return inputTexture.sample(texSampler, in.texCoord);
+}
+
+struct VertexOut {
+    float4 position [[position]];
+    float2 texCoord;
+};
+
+struct PreprocessParams {
+    float3 mean;
+    float3 std;
+};
+```
+
+### 13.5 关键设计要点
+
+| 设计决策 | 原因 | 替代方案 |
+|---------|------|---------|
+| **独立 ComputeQueue** | 避免 Compute 和 Render 互相阻塞 | 共用 Queue 会导致序列化 |
+| **Triple Buffering** | CPU/GPU 并行，避免等待 | Double Buffering 可能不够用 |
+| **Private 存储模式** | Compute → Render 无需 CPU 参与 | Shared 模式增加带宽消耗 |
+| **信号量控制** | 防止内存爆炸（过多帧积压） | 无限制提交会耗尽内存 |
+| **CVMetalTextureCache** | 零拷贝相机帧 → Metal | 手动拷贝增加延迟 |
+
+### 13.6 性能优化检查清单
+
+- [ ] Camera 线程只做轻量工作（格式转换），重计算移到 Compute 线程？
+- [ ] Compute 和 Render 使用独立的 CommandQueue？
+- [ ] 中间纹理使用 `.private` 存储模式？
+- [ ] 使用 `CVMetalTextureCache` 实现相机帧零拷贝？
+- [ ] Triple Buffering 确保 CPU/GPU 并行？
+- [ ] 信号量防止帧积压导致内存爆炸？
+- [ ] Compute 完成后通过 `addCompletedHandler` 通知渲染？
+- [ ] 避免在 CommandBuffer 编码时跨线程访问？
+
+---
+
+## 14. 多线程 MTLTexture 共享
+
+**结论先行**：`MTLTexture` 对象本身是线程安全的（只读引用），但其**内容访问需要同步**。多线程共享纹理的核心原则是：「对象可跨线程传递，内容访问需串行化，GPU 写入后需同步点才能读取」。
+
+### 14.1 线程安全模型
+
+```mermaid
+graph TB
+    subgraph MTLTexture 线程安全模型
+        T[MTLTexture 对象] --> |✅ 线程安全| REF[引用/指针传递]
+        T --> |❌ 需同步| CONTENT[内容读写]
+        
+        CONTENT --> CPU_READ[CPU 读取]
+        CONTENT --> CPU_WRITE[CPU 写入]
+        CONTENT --> GPU_WRITE[GPU 写入]
+        
+        GPU_WRITE --> SYNC[同步点<br/>blitCommandEncoder/<br/>addCompletedHandler]
+        SYNC --> CPU_READ
+    end
+    
+    subgraph 存储模式影响
+        SHARED[.shared] --> |CPU+GPU 访问| SYNC_NEED[需要显式同步]
+        PRIVATE[.private] --> |仅 GPU 访问| NO_CPU[CPU 无法直接访问]
+        MEMORYLESS[.memoryless] --> |仅 Tile 内| RENDER_PASS[RenderPass 内有效]
+    end
+```
+
+### 14.2 多线程共享场景与方案
+
+| 场景 | 方案 | 同步机制 |
+|------|------|---------|
+| **Producer-Consumer** (Compute → Render) | 同一纹理，先 Write 后 Read | `addCompletedHandler` 或 `waitUntilCompleted` |
+| **Ping-Pong 双缓冲** | 两个纹理交替读写 | 索引切换，无需等待 |
+| **CPU 读取 GPU 结果** | `.shared` 纹理 + 同步 | `blitCommandEncoder` 拷贝到 `.shared` Buffer |
+| **多线程并发写入** | 不同纹理区域/不同 Mipmap | 无需同步（无重叠） |
+| **跨帧复用** | Triple Buffering | 信号量控制帧索引 |
+
+### 14.3 完整代码示例：多线程纹理共享
+
+```swift
+import Metal
+import MetalKit
+
+// MARK: - 多线程纹理共享管理器
+
+class MultithreadedTextureManager {
+    private let device: MTLDevice
+    
+    // 两个 CommandQueue：一个用于 Compute，一个用于 Render
+    private let computeQueue: MTLCommandQueue
+    private let renderQueue: MTLCommandQueue
+    
+    // 共享纹理池 (Triple Buffering)
+    private var sharedTextures: [MTLTexture] = []
+    private static let textureCount = 3
+    
+    // 同步原语
+    private let textureIndexLock = NSLock()
+    private var availableIndices: [Int] = [0, 1, 2]
+    private let gpuCompleteSemaphore: DispatchSemaphore
+    
+    // 工作线程
+    private let producerQueue = DispatchQueue(label: "com.example.producer", qos: .userInitiated)
+    private let consumerQueue = DispatchQueue(label: "com.example.consumer", qos: .userInitiated)
+    
+    // 管线状态
+    private var computePipeline: MTLComputePipelineState!
+    private var renderPipeline: MTLRenderPipelineState!
+    
+    init?(device: MTLDevice) {
+        self.device = device
+        guard let computeQueue = device.makeCommandQueue(),
+              let renderQueue = device.makeCommandQueue() else {
+            return nil
+        }
+        self.computeQueue = computeQueue
+        self.renderQueue = renderQueue
+        self.gpuCompleteSemaphore = DispatchSemaphore(value: Self.textureCount)
+        
+        createResources()
+    }
+    
+    // MARK: - 资源创建
+    
+    private func createResources() {
+        // 创建共享纹理 (Compute 写入，Render 读取)
+        let textureDesc = MTLTextureDescriptor.texture2DDescriptor(
+            pixelFormat: .rgba8Unorm,
+            width: 1920,
+            height: 1080,
+            mipmapped: false
+        )
+        
+        // 关键：.private 模式，GPU 独占访问，性能最优
+        // 如果 CPU 需要读取，改用 .shared
+        textureDesc.usage = [.shaderRead, .shaderWrite, .renderTarget]
+        textureDesc.storageMode = .private
+        
+        for i in 0..<Self.textureCount {
+            guard let texture = device.makeTexture(descriptor: textureDesc) else {
+                fatalError("Failed to create texture \(i)")
+            }
+            texture.label = "SharedTexture_\(i)"
+            sharedTextures.append(texture)
+        }
+        
+        // 创建管线状态
+        let library = device.makeDefaultLibrary()!
+        
+        let computeFunc = library.makeFunction(name: "producerKernel")!
+        computePipeline = try! device.makeComputePipelineState(function: computeFunc)
+        
+        let vertexFunc = library.makeFunction(name: "vertexShader")!
+        let fragmentFunc = library.makeFunction(name: "consumerFragment")!
+        
+        let renderDesc = MTLRenderPipelineDescriptor()
+        renderDesc.vertexFunction = vertexFunc
+        renderDesc.fragmentFunction = fragmentFunc
+        renderDesc.colorAttachments[0].pixelFormat = .bgra8Unorm
+        renderPipeline = try! device.makeRenderPipelineState(descriptor: renderDesc)
+    }
+    
+    // MARK: - Producer 线程：写入纹理
+    
+    func startProducing() {
+        producerQueue.async { [weak self] in
+            while let self = self {
+                // 等待可用纹理槽位
+                self.gpuCompleteSemaphore.wait()
+                
+                let textureIndex = self.acquireTextureIndex()
+                let targetTexture = self.sharedTextures[textureIndex]
+                
+                // 创建 CommandBuffer
+                guard let commandBuffer = self.computeQueue.makeCommandBuffer() else {
+                    self.releaseTextureIndex(textureIndex)
+                    continue
+                }
+                
+                // Encode Compute 命令：写入纹理
+                self.encodeProducerWork(commandBuffer: commandBuffer, 
+                                       targetTexture: targetTexture)
+                
+                // 关键：GPU 完成后通知 Consumer
+                commandBuffer.addCompletedHandler { [weak self] _ in
+                    // GPU 写入完成，通知 Consumer 可以读取
+                    self?.notifyConsumer(textureIndex: textureIndex)
+                }
+                
+                commandBuffer.commit()
+                
+                // 模拟工作间隔
+                Thread.sleep(forTimeInterval: 0.016) // ~60fps
+            }
+        }
+    }
+    
+    private func encodeProducerWork(commandBuffer: MTLCommandBuffer, 
+                                    targetTexture: MTLTexture) {
+        guard let encoder = commandBuffer.makeComputeCommandEncoder() else { return }
+        
+        encoder.setComputePipelineState(computePipeline)
+        encoder.setTexture(targetTexture, index: 0)
+        
+        // 设置其他资源...
+        var time = CACurrentMediaTime()
+        encoder.setBytes(&time, length: MemoryLayout<Double>.size, index: 0)
+        
+        let threadGroupSize = MTLSize(width: 16, height: 16, depth: 1)
+        let threadGroups = MTLSize(
+            width: (targetTexture.width + 15) / 16,
+            height: (targetTexture.height + 15) / 16,
+            depth: 1
+        )
+        
+        encoder.dispatchThreadgroups(threadGroups, threadsPerThreadgroup: threadGroupSize)
+        encoder.endEncoding()
+    }
+    
+    // MARK: - Consumer 线程：读取纹理
+    
+    private func notifyConsumer(textureIndex: Int) {
+        consumerQueue.async { [weak self] in
+            self?.consumeTexture(index: textureIndex)
+        }
+    }
+    
+    private func consumeTexture(index: Int) {
+        let sourceTexture = sharedTextures[index]
+        
+        // 创建 Render CommandBuffer
+        guard let commandBuffer = renderQueue.makeCommandBuffer() else { return }
+        
+        // 创建临时 RenderPass (简化示例)
+        let renderPassDesc = MTLRenderPassDescriptor()
+        // ... 配置 renderPassDesc
+        
+        guard let encoder = commandBuffer.makeRenderCommandEncoder(descriptor: renderPassDesc) else {
+            return
+        }
+        
+        // 关键：这里读取 Producer 写入的纹理
+        // 由于 addCompletedHandler 保证，GPU 写入已完成
+        encoder.setRenderPipelineState(renderPipeline)
+        encoder.setFragmentTexture(sourceTexture, index: 0)
+        // ... 绘制全屏四边形
+        encoder.drawPrimitives(type: .triangle, vertexStart: 0, vertexCount: 6)
+        encoder.endEncoding()
+        
+        // Render 完成后释放纹理给 Producer 复用
+        commandBuffer.addCompletedHandler { [weak self] _ in
+            self?.releaseTextureIndex(index)
+            self?.gpuCompleteSemaphore.signal()
+        }
+        
+        commandBuffer.commit()
+    }
+    
+    // MARK: - 纹理索引管理
+    
+    private func acquireTextureIndex() -> Int {
+        textureIndexLock.lock()
+        defer { textureIndexLock.unlock() }
+        
+        // 获取下一个可用索引
+        let index = availableIndices.removeFirst()
+        return index
+    }
+    
+    private func releaseTextureIndex(_ index: Int) {
+        textureIndexLock.lock()
+        defer { textureIndexLock.unlock() }
+        
+        availableIndices.append(index)
+    }
+}
+
+// MARK: - 方案2：Ping-Pong 双缓冲 (无需等待)
+
+class PingPongTextureManager {
+    private let device: MTLDevice
+    private let commandQueue: MTLCommandQueue
+    
+    // 两个纹理交替读写
+    private var textureA: MTLTexture!
+    private var textureB: MTLTexture!
+    private var writeToA = true
+    
+    init?(device: MTLDevice) {
+        self.device = device
+        guard let queue = device.makeCommandQueue() else { return nil }
+        self.commandQueue = queue
+        
+        createTextures()
+    }
+    
+    private func createTextures() {
+        let desc = MTLTextureDescriptor.texture2DDescriptor(
+            pixelFormat: .rgba16Float,
+            width: 1024,
+            height: 1024,
+            mipmapped: false
+        )
+        desc.usage = [.shaderRead, .shaderWrite]
+        desc.storageMode = .private
+        
+        textureA = device.makeTexture(descriptor: desc)!
+        textureB = device.makeTexture(descriptor: desc)!
+        textureA.label = "PingPong_A"
+        textureB.label = "PingPong_B"
+    }
+    
+    /// 迭代处理：输出作为下一次输入
+    func iterateProcess(iterations: Int, completion: @escaping () -> Void) {
+        guard let commandBuffer = commandQueue.makeCommandBuffer() else { return }
+        
+        for i in 0..<iterations {
+            let sourceTexture = writeToA ? textureB : textureA
+            let destTexture = writeToA ? textureA : textureB
+            
+            encodeIteration(commandBuffer: commandBuffer,
+                          source: sourceTexture,
+                          destination: destTexture,
+                          iteration: i)
+            
+            writeToA.toggle()
+        }
+        
+        commandBuffer.addCompletedHandler { _ in
+            completion()
+        }
+        commandBuffer.commit()
+    }
+    
+    private func encodeIteration(commandBuffer: MTLCommandBuffer,
+                                source: MTLTexture,
+                                destination: MTLTexture,
+                                iteration: Int) {
+        guard let encoder = commandBuffer.makeComputeCommandEncoder() else { return }
+        
+        encoder.setTexture(source, index: 0)
+        encoder.setTexture(destination, index: 1)
+        
+        var iter = Int32(iteration)
+        encoder.setBytes(&iter, length: 4, index: 0)
+        
+        // 分派线程...
+        encoder.endEncoding()
+    }
+    
+    /// 获取最终结果
+    var finalResult: MTLTexture {
+        return writeToA ? textureB : textureA
+    }
+}
+
+// MARK: - 方案3：CPU 读取 GPU 结果
+
+class CPUReadableTexture {
+    private let device: MTLDevice
+    private let commandQueue: MTLCommandQueue
+    
+    // GPU 端纹理 (private)
+    private var gpuTexture: MTLTexture!
+    
+    // CPU 可读缓冲区 (shared)
+    private var cpuBuffer: MTLBuffer!
+    
+    init?(device: MTLDevice) {
+        self.device = device
+        guard let queue = device.makeCommandQueue() else { return nil }
+        self.commandQueue = queue
+        
+        createResources()
+    }
+    
+    private func createResources() {
+        // GPU 纹理 (private)
+        let textureDesc = MTLTextureDescriptor.texture2DDescriptor(
+            pixelFormat: .r32Float,
+            width: 512,
+            height: 512,
+            mipmapped: false
+        )
+        textureDesc.usage = [.shaderWrite]
+        textureDesc.storageMode = .private
+        gpuTexture = device.makeTexture(descriptor: textureDesc)
+        
+        // CPU 可读缓冲区 (shared)
+        let bufferSize = 512 * 512 * MemoryLayout<Float>.size
+        cpuBuffer = device.makeBuffer(length: bufferSize, options: .storageModeShared)
+    }
+    
+    /// GPU 写入后，拷贝到 CPU 可读缓冲区
+    func readResultFromGPU(completion: @escaping ([Float]) -> Void) {
+        guard let commandBuffer = commandQueue.makeCommandBuffer(),
+              let blitEncoder = commandBuffer.makeBlitCommandEncoder() else {
+            return
+        }
+        
+        // 将纹理内容拷贝到缓冲区
+        blitEncoder.copy(from: gpuTexture,
+                        sourceSlice: 0,
+                        sourceLevel: 0,
+                        sourceOrigin: MTLOrigin(x: 0, y: 0, z: 0),
+                        sourceSize: MTLSize(width: 512, height: 512, depth: 1),
+                        to: cpuBuffer,
+                        destinationOffset: 0,
+                        destinationBytesPerRow: 512 * MemoryLayout<Float>.size,
+                        destinationBytesPerImage: 512 * 512 * MemoryLayout<Float>.size)
+        
+        blitEncoder.endEncoding()
+        
+        commandBuffer.addCompletedHandler { [weak self] _ in
+            guard let self = self else { return }
+            
+            // 现在可以安全地从 CPU 读取
+            let ptr = self.cpuBuffer.contents().bindMemory(to: Float.self, capacity: 512 * 512)
+            let results = Array(UnsafeBufferPointer(start: ptr, count: 512 * 512))
+            completion(results)
+        }
+        
+        commandBuffer.commit()
+    }
+}
+```
+
+### 14.4 Metal Shaders
+
+```metal
+// MultithreadedTexture.metal
+#include <metal_stdlib>
+using namespace metal;
+
+// Producer Kernel：生成动态内容
+kernel void producerKernel(
+    texture2d<float, access::write> outputTexture [[texture(0)]],
+    constant double& time [[buffer(0)]],
+    uint2 gid [[thread_position_in_grid]])
+{
+    if (gid.x >= outputTexture.get_width() || gid.y >= outputTexture.get_height()) {
+        return;
+    }
+    
+    float2 uv = float2(gid) / float2(outputTexture.get_width(), outputTexture.get_height());
+    
+    // 动态生成内容
+    float t = float(time);
+    float3 color = 0.5 + 0.5 * cos(t + uv.xyx + float3(0, 2, 4));
+    
+    outputTexture.write(float4(color, 1.0), gid);
+}
+
+// Consumer Fragment：读取并显示
+fragment float4 consumerFragment(
+    VertexOut in [[stage_in]],
+    texture2d<float> inputTexture [[texture(0)]])
+{
+    constexpr sampler texSampler(mag_filter::linear, min_filter::linear);
+    return inputTexture.sample(texSampler, in.texCoord);
+}
+
+struct VertexOut {
+    float4 position [[position]];
+    float2 texCoord;
+};
+```
+
+### 14.5 关键要点总结
+
+| 要点 | 说明 |
+|------|------|
+| **对象线程安全** | `MTLTexture` 引用可自由跨线程传递 |
+| **内容访问同步** | GPU 写入 → CPU 读取 需要 `addCompletedHandler` 或 `waitUntilCompleted` |
+| **GPU-GPU 传递** | Compute 写入 → Render 读取，同一纹理无需额外同步（CommandBuffer 顺序提交即可） |
+| **存储模式选择** | 纯 GPU 用 `.private`；CPU 读取用 `.shared` + Blit 拷贝 |
+| **避免竞争** | 多线程同时写入同一纹理的不同区域是安全的；同一区域需串行 |
+
+### 14.6 常见错误
+
+```swift
+// ❌ 错误：GPU 写入后立即 CPU 读取
+computeEncoder.dispatchThreadgroups(...)
+computeEncoder.endEncoding()
+commandBuffer.commit()
+
+// 立即读取 - 错误！GPU 可能还没完成
+let pixel = texture.getBytes(...)  // 数据可能未就绪
+
+// ✅ 正确：等待 GPU 完成
+commandBuffer.addCompletedHandler { _ in
+    // GPU 完成后再读取
+    let pixel = texture.getBytes(...)
+}
+commandBuffer.commit()
+```
+
+---
+
 ## 参考资源
 
 ### 内部知识库关联
