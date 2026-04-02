@@ -1,0 +1,124 @@
+{
+  "sources": [
+    {
+      "name": "OpenAI Harness Engineering Blog",
+      "url": "https://openai.com/index/harness-engineering/",
+      "type": "official_blog",
+      "priority": "P0",
+      "consulted_at": "2026-03-27"
+    },
+    {
+      "name": "Stripe Minions Blog",
+      "url": "https://stripe.dev/blog/minions-stripes-one-shot-end-to-end-coding-agents",
+      "type": "official_blog",
+      "priority": "P0",
+      "consulted_at": "2026-03-27"
+    },
+    {
+      "name": "GitHub Spec Kit",
+      "url": "https://github.com/github/spec-kit",
+      "type": "open_source",
+      "priority": "P0",
+      "consulted_at": "2026-03-27"
+    },
+    {
+      "name": "LangChain State of Agent Engineering",
+      "url": "https://www.langchain.com/state-of-agent-engineering",
+      "type": "research_report",
+      "priority": "P0",
+      "consulted_at": "2026-03-27"
+    },
+    {
+      "name": "Epsilla Blog - Harness Engineering",
+      "url": "https://www.epsilla.com/blogs/harness-engineering-evolution-prompt-context-autonomous-agents",
+      "type": "blog",
+      "priority": "P1",
+      "consulted_at": "2026-03-27"
+    },
+    {
+      "name": "ByteByteGo - Stripe Minions",
+      "url": "https://blog.bytebytego.com/p/how-stripes-minions-ship-1300-prs",
+      "type": "blog",
+      "priority": "P1",
+      "consulted_at": "2026-03-27"
+    },
+    {
+      "name": "Thoughtworks - Spec-driven development",
+      "url": "https://thoughtworks.medium.com/spec-driven-development-d85995a81387",
+      "type": "blog",
+      "priority": "P1",
+      "consulted_at": "2026-03-27"
+    },
+    {
+      "name": "Anthropic MCP",
+      "url": "https://modelcontextprotocol.io/",
+      "type": "specification",
+      "priority": "P0",
+      "consulted_at": "2026-03-27"
+    },
+    {
+      "name": "InfoQ - OpenAI Harness Engineering",
+      "url": "https://www.infoq.com/news/2026/02/openai-harness-engineering-codex/",
+      "type": "news",
+      "priority": "P1",
+      "consulted_at": "2026-03-27"
+    },
+    {
+      "name": "Aider AI",
+      "url": "https://aider.chat/",
+      "type": "tool",
+      "priority": "P1",
+      "consulted_at": "2026-03-27"
+    },
+    {
+      "name": "Spec-Coding Methodology (Local)",
+      "path": "/Volumes/LiSSD/AI_Learn/spec-coding-methodology/",
+      "type": "local",
+      "priority": "P0",
+      "consulted_at": "2026-03-27"
+    },
+    {
+      "name": "Harness Engineering (Local)",
+      "path": "/Volumes/LiSSD/AI_Learn/Knowledge/learn/Harness_Engineering/",
+      "type": "local",
+      "priority": "P0",
+      "consulted_at": "2026-03-27"
+    },
+    {
+      "name": "Drew Breunig - SDD Triangle",
+      "url": "https://www.dbreunig.com/2026/03/04/the-spec-driven-development-triangle.html",
+      "type": "blog",
+      "priority": "P0",
+      "consulted_at": "2026-03-27"
+    },
+    {
+      "name": "ByteIota - Vibe Coding is Dead",
+      "url": "https://byteiota.com/spec-driven-development-kills-vibe-coding-march-2026/",
+      "type": "blog",
+      "priority": "P1",
+      "consulted_at": "2026-03-27"
+    },
+    {
+      "name": "The New Stack - Spec-driven AI development",
+      "url": "https://thenewstack.io/vibe-coding-spec-driven/",
+      "type": "blog",
+      "priority": "P1",
+      "consulted_at": "2026-03-27"
+    }
+  ],
+  "search_queries": [
+    "specification driven development AI coding 2025 2026",
+    "harness engineering AI agent 2025 2026 constraints feedback loops",
+    "OpenAI Codex engineering practices harness",
+    "Stripe Minions AI coding system large scale",
+    "Mitchell Hashimoto harness engineering AI coding",
+    "GitHub Copilot workspace spec driven development",
+    "LangChain agent evaluation harness benchmark",
+    "aider AI pair programming best practices",
+    "Anthropic MCP Model Context Protocol agent",
+    "Vercel v0 AI SDK tool reduction",
+    "spec driven development latest news March 2026",
+    "Claude Code vs Cursor vs Copilot 2026",
+    "vibe coding dead AWS spec driven"
+  ]
+}

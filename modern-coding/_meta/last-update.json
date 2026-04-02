@@ -1,0 +1,24 @@
+{
+  "last_collection": "2026-03-27T12:00:00Z",
+  "collection_count": 2,
+  "documents_created": 8,
+  "documents_updated": 2,
+  "search_queries_executed": 13,
+  "sources_consulted": 18,
+  "collection_mode": "update",
+  "integrated_from": [
+    "spec-coding-methodology/",
+    "Knowledge/learn/Harness_Engineering/"
+  ],
+  "update_2026_03_27": {
+    "new_topics": [
+      "SDD Triangle Model",
+      "Vibe Coding is Dead",
+      "Claude Code popularity"
+    ],
+    "documents_updated": [
+      "06_Evolution_Tracker/2025-2026_演进报告.md",
+      "01_Spec_Driven_Development/SDD_核心方法论_详细解析.md"
+    ]
+  }
+}

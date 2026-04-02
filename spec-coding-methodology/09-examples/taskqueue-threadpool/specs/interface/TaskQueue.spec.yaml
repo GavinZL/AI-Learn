@@ -1,0 +1,299 @@
+# TaskQueue Interface Specification
+
+## Overview
+
+This document defines the interface specifications for the TaskQueue system.
+
+**Requirements Covered**:
+- FR-001: Task execution functionality
+- FR-002: Queue type support
+- FR-003: Thread pool management
+- FR-004: Task group management
+
+**Architecture Decisions**:
+- ADR-001: Class hierarchy design
+- ADR-002: Queue implementation strategy
+- ADR-003: Thread scheduling strategy
+
+---
+
+## Core Types
+
+### QueueType
+
+```yaml
+QueueType:
+  type: enum
+  values:
+    - Serial:       # @require FR-002
+        description: |
+          Exclusive thread per queue.
+          Tasks execute sequentially on the same thread.
+    - Concurrent:   # @require FR-002
+        description: |
+          Ordered execution start, but may run on different threads.
+          Tasks start in submission order but may overlap.
+    - Parallel:     # @require FR-002
+        description: |
+          Maximum parallelism, no ordering guarantees.
+          Tasks are distributed across all available threads.
+```
+
+### TaskFuture
+
+```yaml
+TaskFuture:
+  type: template
+  parameters:
+    - T: Return type of the task
+  description: |
+    @require FR-001
+    Future for retrieving async task results.
+  methods:
+    - name: get
+      signature: "T get()"
+      description: Block until task completes and return result
+      throws:
+        - std::future_error if task was cancelled
+    - name: wait
+      signature: "void wait() const"
+      description: Block until task completes
+    - name: valid
+      signature: "bool valid() const"
+      description: Check if future has a shared state
+```
+
+---
+
+## Classes
+
+### TaskQueue
+
+```yaml
+TaskQueue:
+  description: |
+    @require FR-001, FR-002
+    @adr ADR-001
+    High-level API for task execution.
+  constructors:
+    - signature: "TaskQueue(QueueType type)"
+      description: Create queue with specified type
+    - signature: "TaskQueue(QueueType type, std::string name)"
+      description: Create named queue for debugging
+  
+  methods:
+    - name: async
+      signature: "template<typename F> auto async(F&& f) -> TaskFuture<invoke_result_t<F>>"
+      requirement_ref: FR-001
+      description: Execute task asynchronously
+      parameters:
+        - name: f
+          type: Callable
+          description: Task to execute
+      returns: Future for retrieving result
+      preconditions:
+        - Queue is not shutdown
+      postconditions:
+        - Task is queued for execution
+      complexity: O(1) amortized
+      thread_safety: Yes
+      
+    - name: sync
+      signature: "template<typename F> auto sync(F&& f) -> invoke_result_t<F>"
+      requirement_ref: FR-001
+      description: Execute task synchronously
+      parameters:
+        - name: f
+          type: Callable
+          description: Task to execute
+      returns: Task execution result
+      preconditions:
+        - Queue is not shutdown
+      postconditions:
+        - Task has completed execution
+      complexity: O(task execution time)
+      thread_safety: Yes
+      
+    - name: after
+      signature: "template<typename D, typename F> auto after(D delay, F&& f) -> TaskFuture<invoke_result_t<F>>"
+      requirement_ref: FR-001
+      description: Execute task after specified delay
+      parameters:
+        - name: delay
+          type: std::chrono::duration
+          description: Time to wait before execution
+        - name: f
+          type: Callable
+          description: Task to execute
+      returns: Future for retrieving result
+      preconditions:
+        - Queue is not shutdown
+        - delay > 0
+      postconditions:
+        - Task is scheduled for future execution
+      
+    - name: wait
+      signature: "void wait()"
+      requirement_ref: FR-001
+      description: Wait for all pending tasks to complete
+      postconditions:
+        - All submitted tasks have completed
+      
+    - name: wait_for
+      signature: "template<typename D> bool wait_for(D timeout)"
+      requirement_ref: FR-001
+      description: Wait for all pending tasks with timeout
+      parameters:
+        - name: timeout
+          type: std::chrono::duration
+          description: Maximum time to wait
+      returns: true if all tasks completed, false if timeout
+```
+
+### TaskGroup
+
+```yaml
+TaskGroup:
+  description: |
+    @require FR-004
+    @adr ADR-001
+    Group multiple tasks for collective management.
+  methods:
+    - name: add
+      signature: "template<typename F> auto add(TaskQueue& queue, F&& f) -> TaskFuture"
+      requirement_ref: FR-004
+      description: Add task to group
+      parameters:
+        - name: queue
+          type: TaskQueue&
+          description: Queue to execute task on
+        - name: f
+          type: Callable
+          description: Task to execute
+      returns: Future for retrieving result
+      
+    - name: wait
+      signature: "void wait()"
+      requirement_ref: FR-004
+      description: Wait for all tasks in group to complete
+      
+    - name: on_complete
+      signature: "void on_complete(TaskQueue& queue, std::function<void()> callback)"
+      requirement_ref: FR-004
+      description: Set callback to be called when all tasks complete
+      parameters:
+        - name: queue
+          type: TaskQueue&
+          description: Queue to execute callback on
+        - name: callback
+          type: std::function<void()>
+          description: Callback function
+```
+
+---
+
+## Internal Interfaces
+
+### IQueueImpl
+
+```yaml
+IQueueImpl:
+  description: |
+    @adr ADR-001, ADR-002
+    Backend queue implementation interface.
+  methods:
+    - name: submit
+      signature: "void submit(std::unique_ptr<TaskOperator> task)"
+      description: Submit task to queue
+      
+    - name: run
+      signature: "void run()"
+      description: Start processing tasks
+      
+    - name: stop
+      signature: "void stop()"
+      description: Stop processing tasks
+```
+
+### IThreadPool
+
+```yaml
+IThreadPool:
+  description: |
+    @adr ADR-001, ADR-003
+    Thread pool management interface.
+  methods:
+    - name: submit
+      signature: "void submit(std::function<void()> task)"
+      description: Submit task to thread pool
+      
+    - name: shutdown
+      signature: "void shutdown()"
+      description: Graceful shutdown
+      
+    - name: shutdown_now
+      signature: "void shutdown_now()"
+      description: Immediate shutdown
+```
+
+---
+
+## Configuration
+
+```yaml
+ConcurrencyPoolConfig:
+  description: Configuration for concurrent thread pool
+  @adr ADR-003
+  properties:
+    min_threads:
+      type: size_t
+      default: 1
+      description: Minimum number of threads
+    max_threads:
+      type: size_t
+      default: hardware_concurrency()
+      description: Maximum number of threads
+    idle_timeout:
+      type: std::chrono::milliseconds
+      default: 60000
+      description: Idle thread timeout before termination
+    scale_up_threshold:
+      type: double
+      default: 0.8
+      description: Utilization threshold to scale up
+    scale_down_threshold:
+      type: double
+      default: 0.3
+      description: Utilization threshold to scale down
+```
+
+---
+
+## Error Handling
+
+### Exceptions
+
+```yaml
+exceptions:
+  - name: QueueClosedException
+    inheritance: std::runtime_error
+    description: Thrown when submitting to a closed queue
+    requirement_ref: FR-001
+    
+  - name: TaskCancelledException
+    inheritance: std::runtime_error
+    description: Thrown when attempting to get result of cancelled task
+    requirement_ref: FR-001
+```
+
+---
+
+## Performance Characteristics
+
+| Operation | SerialQueue | ConcurrentQueue | ParallelQueue |
+|-----------|-------------|-----------------|---------------|
+| async()   | < 1μs       | < 2μs           | < 1μs         |
+| sync()    | blocking    | blocking        | blocking      |
+| Memory/task | 256 bytes | 256 bytes       | 256 bytes     |
+
+See [NFR-001](../requirements/NFR-001-performance.md) for detailed requirements.

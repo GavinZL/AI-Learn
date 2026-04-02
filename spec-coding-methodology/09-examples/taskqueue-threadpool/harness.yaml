@@ -1,0 +1,283 @@
+# Harness Configuration for TaskQueue Project
+
+harness:
+  name: taskqueue-threadpool
+  version: 1.0.0
+  description: |
+    Harness configuration for C++ TaskQueue + ThreadPool project.
+    This configuration defines how AI-assisted development should be
+    conducted for this codebase.
+  
+  # ============================================================================
+  # Context Engineering
+  # ============================================================================
+  context:
+    # Maximum tokens to include in context window
+    max_tokens: 10000
+    
+    # Files to include in AI context
+    include_files:
+      # Requirements
+      - specs/requirements/*.md
+      
+      # Architecture
+      - specs/architecture/*.md
+      
+      # Interface specifications
+      - specs/interface/*.yaml
+      
+      # Type definitions
+      - src/types/*.h
+      
+      # Public interfaces
+      - src/frontend/*.h
+      - src/backend/IQueueImpl.h
+      - src/threadpool/IThreadPool.h
+      - src/operator/TaskOperator.h
+    
+    # Patterns to exclude from context
+    exclude_patterns:
+      - "*_test.cpp"
+      - "*_test.h"
+      - "build/"
+      - ".git/"
+      - "cmake-build-*/"
+      - "*.o"
+      - "*.a"
+      - "*.so"
+    
+    # Priority files (always included first)
+    priority_files:
+      - specs/requirements/FR-001-task-execution.md
+      - specs/architecture/ADR-001-class-hierarchy.md
+  
+  # ============================================================================
+  # Tool Orchestration
+  # ============================================================================
+  tools:
+    - name: file_read
+      description: Read file content
+      parameters:
+        - path: File path to read
+      
+    - name: file_write
+      description: Write file content
+      parameters:
+        - path: File path to write
+        - content: Content to write
+      
+    - name: file_edit
+      description: Edit existing file
+      parameters:
+        - path: File path
+        - old_string: String to replace
+        - new_string: Replacement string
+      
+    - name: cmake_configure
+      description: Run CMake configuration
+      command: "cmake -B build -S ."
+      
+    - name: build
+      description: Build the project
+      command: "cmake --build build -j$(nproc)"
+      
+    - name: test_run
+      description: Run tests
+      command: "cd build && ctest --output-on-failure"
+      
+    - name: lint_check
+      description: Run clang-tidy
+      command: "clang-tidy src/**/*.cpp"
+      
+    - name: format_check
+      description: Check code formatting
+      command: "clang-format --dry-run --Werror src/**/*.cpp"
+  
+  # ============================================================================
+  # Verification Loops
+  # ============================================================================
+  verification:
+    # Steps to run after each code generation
+    steps:
+      - name: cmake_configure
+        command: "cmake -B build -S . -DCMAKE_BUILD_TYPE=Release"
+        must_pass: true
+        timeout: 60
+        
+      - name: compile
+        command: "cmake --build build -j$(nproc)"
+        must_pass: true
+        timeout: 300
+        
+      - name: unit_tests
+        command: "cd build && ctest --output-on-failure"
+        must_pass: true
+        min_coverage: 80
+        
+      - name: lint
+        command: "clang-tidy src/**/*.cpp -- -std=c++17"
+        must_pass: true
+        
+      - name: format
+        command: "find src -name '*.cpp' -o -name '*.h' | xargs clang-format --dry-run --Werror"
+        must_pass: true
+        
+      - name: traceability_check
+        command: "python scripts/check_requirement_tags.py src/"
+        must_pass: true
+        
+      - name: include_guard_check
+        command: "python scripts/check_include_guards.py src/"
+        must_pass: true
+    
+    # Steps for performance-critical changes
+    performance_steps:
+      - name: benchmarks
+        command: "./build/benchmarks/run_benchmarks"
+        must_pass: true
+        
+      - name: profile
+        command: "valgrind --tool=callgrind ./build/benchmarks/profile_target"
+        must_pass: false  # Informational only
+  
+  # ============================================================================
+  # Cost Envelope
+  # ============================================================================
+  cost:
+    # Global limits per task
+    max_tokens_per_task: 50000
+    max_api_calls_per_task: 20
+    
+    # Alert threshold (0.0 - 1.0)
+    alert_threshold: 0.8
+    
+    # Task-specific budgets
+    budgets:
+      simple_refactor:
+        description: Simple refactoring tasks
+        max_tokens: 10000
+        max_api_calls: 5
+        
+      bug_fix:
+        description: Bug fixes
+        max_tokens: 15000
+        max_api_calls: 10
+        
+      new_feature:
+        description: Implementing new features
+        max_tokens: 30000
+        max_api_calls: 15
+        
+      complex_feature:
+        description: Complex features with multiple components
+        max_tokens: 50000
+        max_api_calls: 20
+    
+    # Cost tracking
+    track_metrics:
+      - tokens_used
+      - api_calls
+      - duration_ms
+      - verification_failures
+  
+  # ============================================================================
+  # Observability
+  # ============================================================================
+  observability:
+    # Log level: debug, info, warn, error
+    log_level: debug
+    
+    # Trace format
+    trace_format: structured  # structured | text
+    
+    # Output directory
+    output_dir: ./logs/harness
+    
+    # Metrics to collect
+    metrics:
+      - name: task_completion_rate
+        type: gauge
+        description: Percentage of tasks completed successfully
+        
+      - name: verification_pass_rate
+        type: gauge
+        description: Percentage of verification steps passing
+        
+      - name: tokens_used
+        type: counter
+        description: Total tokens used
+        
+      - name: api_calls
+        type: counter
+        description: Total API calls made
+        
+      - name: duration_ms
+        type: histogram
+        description: Task execution duration
+        buckets: [100, 500, 1000, 5000, 10000]
+    
+    # Alerting rules
+    alerts:
+      - name: high_cost
+        condition: "tokens_used > 40000"
+        severity: warning
+        message: "Approaching token limit"
+        
+      - name: verification_failure
+        condition: "verification_pass_rate < 1.0"
+        severity: error
+        message: "Verification failed"
+        
+      - name: performance_regression
+        condition: "duration_ms > 10000"
+        severity: warning
+        message: "Task taking longer than expected"
+  
+  # ============================================================================
+  # Code Generation Guidelines
+  # ============================================================================
+  generation:
+    # Language-specific settings
+    cpp:
+      standard: c++17
+      warnings_as_errors: true
+      warnings:
+        - -Wall
+        - -Wextra
+        - -Wpedantic
+        - -Werror
+      
+      # Code style
+      style:
+        indent: 4 spaces
+        max_line_length: 100
+        brace_style: attach
+        
+      # Required in every file
+      required_headers:
+        - pragma once
+        - file documentation comment
+        - requirement tags
+      
+      # Documentation requirements
+      documentation:
+        public_methods: required
+        private_methods: optional
+        classes: required
+        complex_functions: required
+  
+  # ============================================================================
+  # Review Checklist
+  # ============================================================================
+  review:
+    # Items to check before marking task complete
+    checklist:
+      - "All requirements have @require tags"
+      - "All ADRs have @adr tags"
+      - "Code compiles without warnings"
+      - "All tests pass"
+      - "Coverage >= 80%"
+      - "Documentation is complete"
+      - "No memory leaks (valgrind clean)"
+      - "Code follows style guide"
+      - "Commit message references requirements"

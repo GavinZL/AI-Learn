@@ -1,0 +1,35 @@
+{
+  "name": "TaskQueue Example",
+  "description": "A C++ task queue library similar to iOS GCD",
+  "language": "cpp",
+  "standard": "c++17",
+  "complexity": "medium",
+  
+  "initial_requirements": {
+    "business_context": "Need a high-performance task queue library for concurrent programming",
+    "problem": "Existing thread pools lack flexibility and type-safe interfaces",
+    "value": "Provides efficient, easy-to-use concurrency abstractions"
+  },
+  
+  "features": [
+    "Three queue types: Serial, Concurrent, Parallel",
+    "Async/sync/after task execution",
+    "Task group management",
+    "Thread pool management",
+    "Exception safety",
+    "Type-safe API"
+  ],
+  
+  "constraints": {
+    "performance": "P99 latency < 10μs",
+    "throughput": "> 1M tasks/sec",
+    "memory": "< 256 bytes per task",
+    "dependencies": "Minimal external dependencies"
+  },
+  
+  "stakeholders": {
+    "primary_users": "C++ developers building concurrent applications",
+    "technical_level": "Intermediate to advanced",
+    "use_cases": ["Game engines", "Multimedia processing", "Backend services"]
+  }
+}
