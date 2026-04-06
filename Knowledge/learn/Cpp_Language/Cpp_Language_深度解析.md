@@ -146,7 +146,7 @@ C++ 语言体系基于以下关键支柱：
 
 | 概念 | 英文 | 一句话总结 | 详见 |
 |------|------|-----------|------|
-| **vtable** | Virtual Table | 虚函数表，实现运行时多态的核心机制 | 继承与多态 |
+| **vtable** | Virtual Table | 虚函数表，实现运行时多态的核心机制（只读数据段） | 继承与多态 |
 | **vptr** | Virtual Pointer | 对象中指向 vtable 的隐藏指针 | 继承与多态 |
 | **override** | Override Specifier | C++11 关键字，确保正确重写虚函数 | 继承与多态 |
 | **final** | Final Specifier | 禁止类被继承或虚函数被重写 | 继承与多态 |
@@ -653,7 +653,7 @@ void Widget::doSomething() { pImpl->doSomething(); }
 
 1. **auto 类型推导规则**
    - 追问：`auto x = {42}` 的类型是什么？`std::initializer_list<int>`
-   - 追问：`auto&` 和 `auto&&` 的区别？
+   - 追问：`auto&` 和 `auto&&` 的区别？ 左值引用 和 万能引用
 
 2. **四种类型转换的使用场景**
    - `static_cast`：相关类型转换（数值、指针上下转换）
@@ -663,7 +663,7 @@ void Widget::doSomething() { pImpl->doSomething(); }
 
 3. **对象生命周期与存储期**
    - 追问：返回局部变量引用为什么是 UB？
-   - 追问：静态初始化顺序问题如何解决？（Construct On First Use Idiom）
+   - 追问：静态初始化顺序问题如何解决？（Construct On First Use Idiom 第一次调用时初始化）
 
 ### 面向对象编程 Top 3
 
